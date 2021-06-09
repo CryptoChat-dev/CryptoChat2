@@ -1,6 +1,6 @@
 {
   "short_name": "CryptoChat",
-  "name": "Chat anonymously and securely using disposable rooms.",
+  "name": "CryptoChat",
   "icons": [
     {
       "src": "/assets/favicon.ico",
