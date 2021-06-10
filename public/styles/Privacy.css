@@ -41,9 +41,7 @@
 }
 
 .chatbox-buttons {
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin: 5%;
 }
 
 a {
@@ -84,5 +82,6 @@ a {
 
     .chatbox-buttons {
         justify-content: center;
+        margin-bottom: 30%;
     }
 }

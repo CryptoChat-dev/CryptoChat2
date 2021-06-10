@@ -159,3 +159,11 @@ h1 {
     text-align: center;
     font-weight: lighter;
 }
+
+/* Media queries */
+
+@media only screen and (max-width: 800px) {
+    .button.randomize {
+        width: 6rem;
+    }
+}

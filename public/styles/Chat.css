@@ -192,3 +192,9 @@ body {
         width: 60%;
     }
 }
+
+@media only screen and (max-height: 730px) {
+    .chatbox-messages {
+        height: 70%;
+    }
+}

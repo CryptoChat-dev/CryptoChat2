@@ -13,9 +13,11 @@ const Legal = () => { // State Variables
         if (state.theme === 'light') {
             themeSetting = 'dark';
             dispatch({type: 'SET_OTHEME', payload: 'light'})
+            dispatch({type: 'SET_MODAL', payload: '#292929'})
         } else {
             themeSetting = 'light';
             dispatch({type: 'SET_OTHEME', payload: 'dark'})
+            dispatch({type: 'SET_MODAL', payload: '#b3b3b3'})
         }
         dispatch({type: 'SET_THEME', payload: themeSetting})
         document.documentElement.setAttribute('data-theme', themeSetting);
