@@ -165,10 +165,9 @@ const Chat = () => {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
         console.log("[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to blob.")
         const blob = b64toBlob(decryptedData);
-        const blobUrl = window.URL.createObjectURL(blob);
+        // const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.")
-        window.open = blobUrl;
-          
+        window.saveAs(blob, 'exampleName');
     }
 
     function broadcastLeave() {
