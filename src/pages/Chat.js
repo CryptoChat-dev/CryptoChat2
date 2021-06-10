@@ -25,7 +25,7 @@ export const initiateSocket = (room) => {
 }
 
 const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-    const byteCharacters = atob(b64Data);
+    const byteCharacters = atob(btoa(b64Data));
     const byteArrays = [];
   
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
@@ -248,9 +248,8 @@ const Chat = () => {
                 setFile(null);
                 setFileObject(null);
                 setMessageIcon('faPaperclip')
-                return;
             };
-
+            return;
         }
         console.log("[Send Button] Message mode.")
 
