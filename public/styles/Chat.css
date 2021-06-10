@@ -85,6 +85,8 @@ a {
 }
 
 .username {
+    display: flex;
+    justify-content:center;
     margin-bottom: 30px;
     border-radius: 25px;
     box-shadow: inset 8px 8px 8px var(--inside-box-shadow-one),

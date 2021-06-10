@@ -8,9 +8,15 @@ import notificationSound from '../assets/notification.mp3';
 // Crypto JS
 import CryptoJS from 'crypto-js';
 
+// Icons
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
+
 // Socket.IO
 import io from "socket.io-client";
 let socket;
+
 
 export const initiateSocket = (room) => {
     socket = io(process.env.REACT_APP_API);
@@ -81,7 +87,12 @@ const Chat = () => {
 
     useEffect(() => {
         window.onbeforeunload = broadcastLeave;
-        socket.on('my response', messageHandler);
+        try{
+            socket.on('my response', messageHandler);
+        } catch(err) {
+            history.push('/');
+            return;
+        }
         return() => {
             socket.off('my response')
         }
@@ -190,6 +201,7 @@ const Chat = () => {
                                         value={message}
                                         onChange={handleMessageChange}
                                         onKeyDown={handleMessageKeyDown}/>
+                                <button class="iconbutton attach"><FontAwesomeIcon icon={faPaperclip} size="240x" /></button>
                                 </div>
                             </div>
                         </div>

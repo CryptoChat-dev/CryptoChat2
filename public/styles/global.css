@@ -152,6 +152,25 @@ h1 {
     background: rgb(11, 95, 247);
 }
 
+.iconbutton {
+    /* background: var(--bttn-color); */
+    background: transparent;
+    color: var(--txt-color);
+    border: none;
+}
+
+.iconbutton.attach {
+    margin-left: 3%;
+    font-size: 36px;
+    margin-right: 1%;
+}
+
+.iconbutton.attach:hover {
+    cursor: pointer;
+}
+
+/* Loader */
+
 .loader {
     position: absolute;
     top: calc(50% - 4em);
