@@ -155,6 +155,7 @@ const Chat = () => {
     }
 
     function fileHandler(msg) {
+        console.log(msg)
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
         var decryptedName = crypt.decryptMessage(msg.name, state.key);
         if (decryptedUsername !== '') { // if the username is an empty value, stop
