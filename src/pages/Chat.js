@@ -24,19 +24,14 @@ export const initiateSocket = (room) => {
     socket.emit('join', roomName)
 }
 
-// Convert file to base64 string
-export const fileToBase64 = (filename, filepath) => {
-    return new Promise(resolve => {
-        var file = new File([filename], filepath);
-        var reader = new FileReader();
-        // Read file content on file loaded event
-        reader.onload = function (event) {
-            resolve(event.target.result);
-        };
-
-        // Convert data to base64
-        reader.readAsDataURL(file);
-    });
+var blobToBase64 = function (blob, callback) {
+    var reader = new FileReader();
+    reader.onload = function () {
+        var dataUrl = reader.result;
+        var base64 = dataUrl.split(',')[1];
+        callback(base64);
+    };
+    reader.readAsDataURL(blob);
 };
 
 const Chat = () => {
@@ -108,33 +103,50 @@ const Chat = () => {
     useEffect(() => {
         window.onbeforeunload = broadcastLeave;
         try {
-            socket.on('my response', messageHandler);
+            socket.on('chat response', messageHandler);
+            socket.on('file response', fileHandler)
         } catch (err) {
             history.push('/');
             return;
         }
         return() => {
-            socket.off('my response')
+            socket.off('chat response');
+            socket.off('file response');
         }
     }, []);
 
     function messageHandler(msg) {
-        var decryptedUsername;
-        var decryptedMessage;
-        decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
-        decryptedMessage = crypt.decryptMessage(msg.message, state.key);
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        var decryptedMessage = crypt.decryptMessage(msg.message, state.key);
         if (decryptedUsername !== '' || decryptedMessage !== '') { // if the username and message are empty values, stop
             console.log(msg); // for debugging: print the encrypted contents of the response
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p> {decryptedUsername}: {decryptedMessage}</p>
+                    <p> <b>{decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);
             playNotification();
             divRef.current.scrollIntoView({behavior: 'smooth'});
         } else {
             console.log(`Not my message: ${msg}`)
+        }
+    }
+
+    function fileHandler(msg) {
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        var decryptedName = crypt.decryptMessage(msg.name, state.key);
+        if (decryptedUsername !== '') { // if the username is an empty value, stop
+            setReceived((messages) => [
+                ...messages,
+                <div ref={divRef}>
+                    <p><b>{decryptedUsername} sent an attachment</b>. Decrypt {decryptedName}.</p>
+                </div>
+            ]);
+            playNotification();
+            divRef.current.scrollIntoView({behavior: 'smooth'});
+        } else {
+            console.log(`Not my message: ${msg.name}`)
         }
     }
 
@@ -181,7 +193,18 @@ const Chat = () => {
 
         if (fileSelected === true) {
             console.log("[Send Button] Attachment mode.");
-            fileToBase64(file.name, )
+
+            // Define the FileReader which is able to read the contents of Blob
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
+                var b64 = reader.result.replace(/^data:.+;base64,/, '');
+            };
+
+            reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
+            console.log("[Send Button] Base64 encoded data. Sending...")
+
             return;
         }
         console.log("[Send Button] Message mode.")
@@ -205,7 +228,7 @@ const Chat = () => {
         setFileSelected(true);
         var binaryData = [];
         binaryData.push(event.target.files[0]);
-        setFileObject(window.URL.createObjectURL(new Blob(binaryData, {type: "application/png"})))
+        setFileObject(new Blob(binaryData))
         var thisFile = event.target.files[0];
         setFile(thisFile);
         const sizeMB = thisFile.size / 1024000;
@@ -249,8 +272,7 @@ const Chat = () => {
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
                     </h2>
-                    {/* <img src={fileObject}></img> */}
-                </div>
+                    {/* <img src={fileObject}></img> */} </div>
                 <div class="chatbox-messages">
                     <div class="messageviewer-parent">
                         <div id="messageviewer" name="messageviewer" class="messageviewer">
