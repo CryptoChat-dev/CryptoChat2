@@ -175,7 +175,7 @@ const Chat = () => {
 
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
-        console.log("[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to blob.")
+        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
         const blob = b64toBlob(decryptedData, decryptedMIME);
         const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.")
@@ -235,7 +235,7 @@ const Chat = () => {
                 // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = reader.result;
-                console.log("[Send Button] Base64 encoded data. Sending...")
+                console.log(`[Send Button] Base64 encoded data. Sending ${fileObject.type}.`)
                 console.log(reader)
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
