@@ -274,7 +274,7 @@ const Chat = () => {
         setFileSelected(true);
         var binaryData = [];
         binaryData.push(event.target.files[0]);
-        setFileObject(new Blob(binaryData))
+        setFileObject(new Blob(binaryData, {type: event.target.files[0].type}))
         var thisFile = event.target.files[0];
         setFile(thisFile);
         const sizeMB = thisFile.size / 1024000;
