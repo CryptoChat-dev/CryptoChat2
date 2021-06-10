@@ -11,7 +11,7 @@ import CryptoJS from 'crypto-js';
 // Icons
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPaperclip} from '@fortawesome/free-solid-svg-icons'
+import {faPaperclip, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 // Socket.IO
 import io from "socket.io-client";
@@ -31,7 +31,13 @@ const Chat = () => {
     const hiddenFileInput = React.useRef(null);
 
     const [state, dispatch] = useContext(Context);
+
     const [message, setMessage] = React.useState();
+    const [messageIcon, setMessageIcon] = React.useState('faPaperclip')
+
+    const [fileSelected, setFileSelected] = React.useState(false);
+    const [file, setFile] = React.useState('');
+
     const [received, setReceived] = React.useState([]);
     const [joinedSent, setJoinedSent] = React.useState(false);
     const [disabled, setDisabled] = React.useState(false);
@@ -170,14 +176,25 @@ const Chat = () => {
     }
 
     function handleInputChange(event) {
-        const fileUploaded = event.target.files[0];
-        const sizeMB = fileUploaded.size / 1024000;
-        setMessage(`Attached: ${fileUploaded.name} (${sizeMB.toFixed(2)} MB)`);
+        setFileSelected(true);
+        var thisFile = event.target.files[0];
+        setFile(thisFile);
+        const sizeMB = thisFile.size / 1024000;
+        setMessage(`Attached: ${thisFile.name} (${sizeMB.toFixed(2)} MB)`);
         setDisabled(true);
+        setMessageIcon('faTimes');
     }
 
-    function handleAttachClick(event) {
-        hiddenFileInput.current.click();
+    function handleMessageButtonClick(event) {
+        if (messageIcon === 'faPaperclip' && fileSelected === false) {
+            hiddenFileInput.current.click();
+        } else if (messageIcon === 'faTimes' && fileSelected === true) {
+            setFileSelected(false);
+            setFile(null);
+            setMessage('');
+            setDisabled(false);
+            setMessageIcon('faPaperclip');
+        }
     }
 
     // Return
@@ -218,7 +235,8 @@ const Chat = () => {
                                         ref={hiddenFileInput}
                                         onChange={handleInputChange}/>
                                     <button class="iconbutton attach"
-                                        onClick={handleAttachClick}><FontAwesomeIcon icon={faPaperclip}/></button>
+                                        onClick={handleMessageButtonClick}>{messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>}
+                                        {messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes} />}</button>
                                 </div>
                             </div>
                         </div>
