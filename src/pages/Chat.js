@@ -235,8 +235,9 @@ const Chat = () => {
                 // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = reader.result;
+                console.log(reader)
                 console.log(`[Send Button] Base64 encoded data. Sending ${fileObject.type}.`)
-                console.log(fileObject)
+                console.log(encodedData)
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
