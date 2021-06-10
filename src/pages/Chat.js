@@ -215,6 +215,7 @@ const Chat = () => {
             setFileSelected(false);
             setFile(null);
             setFileObject(null);
+            setMessageIcon('faPaperclip')
             return;
         }
         console.log("[Send Button] Message mode.")
