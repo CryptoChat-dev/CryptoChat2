@@ -236,7 +236,7 @@ const Chat = () => {
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = reader.result;
                 console.log(`[Send Button] Base64 encoded data. Sending ${fileObject.type}.`)
-                console.log(reader)
+                console.log(fileObject)
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
