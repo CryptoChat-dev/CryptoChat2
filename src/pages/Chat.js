@@ -140,7 +140,7 @@ const Chat = () => {
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p><b>{decryptedUsername} sent an attachment</b>. <u><span class="decrypt">Click to decrypt {decryptedName}.</span></u></p>
+                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt">Click to decrypt {decryptedName}.</span></p>
                 </div>
             ]);
             playNotification();

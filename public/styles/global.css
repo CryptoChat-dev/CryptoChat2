@@ -7,6 +7,7 @@
     --txt-color: white;
     --bttn-color: black;
     --modal-color: #292929;
+    --decrypt-color: rgb(119, 119, 255);
 }
 
 [data-theme='light'] {
@@ -18,6 +19,7 @@
     --txt-color: black;
     --bttn-color: white;
     --modal-color: #b3b3b3;
+    --decrypt-color: blue;
 }
 
 * {
@@ -210,7 +212,7 @@ h1 {
 }
 
 .decrypt {
-    color: blue;
+    color: var(--decrypt-color);
 }
 
 /* Input */
