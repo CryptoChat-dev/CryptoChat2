@@ -198,7 +198,7 @@ h1 {
     }
 }
 
-/* Classes for Headings */
+/* Classes for Text */
 
 .title.splash {
     margin-bottom: 0;
@@ -207,6 +207,10 @@ h1 {
 .subtitle {
     text-align: center;
     font-weight: lighter;
+}
+
+.blue {
+    color: blue;
 }
 
 /* Input */
