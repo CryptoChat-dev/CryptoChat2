@@ -10,8 +10,8 @@ import CryptoJS from 'crypto-js';
 
 // Icons
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faPaperclip} from '@fortawesome/free-solid-svg-icons'
 
 // Socket.IO
 import io from "socket.io-client";
@@ -28,12 +28,13 @@ const Chat = () => {
     const history = useHistory();
     const divRef = useRef(null);
     const [playNotification] = useSound(notificationSound);
+    const hiddenFileInput = React.useRef(null);
 
     const [state, dispatch] = useContext(Context);
     const [message, setMessage] = React.useState();
     const [received, setReceived] = React.useState([]);
     const [joinedSent, setJoinedSent] = React.useState(false);
-
+    const [disabled, setDisabled] = React.useState(false);
     var themeSetting;
 
 
@@ -66,10 +67,7 @@ const Chat = () => {
 
         var roomName = CryptoJS.SHA512(state.key).toString();
 
-        dispatch({
-            type: 'SET_ROOM',
-            payload: roomName
-        });
+        dispatch({type: 'SET_ROOM', payload: roomName});
 
         initiateSocket(state.key);
 
@@ -87,9 +85,9 @@ const Chat = () => {
 
     useEffect(() => {
         window.onbeforeunload = broadcastLeave;
-        try{
+        try {
             socket.on('my response', messageHandler);
-        } catch(err) {
+        } catch (err) {
             history.push('/');
             return;
         }
@@ -112,7 +110,7 @@ const Chat = () => {
                 </div>
             ]);
             playNotification();
-            divRef.current.scrollIntoView({ behavior: 'smooth' });
+            divRef.current.scrollIntoView({behavior: 'smooth'});
         } else {
             console.log(`Not my message: ${msg}`)
         }
@@ -161,6 +159,7 @@ const Chat = () => {
             "user_name": crypt.encryptMessage(state.username, state.key),
             "message": crypt.encryptMessage(message, state.key)
         })));
+        setDisabled(false);
         setMessage('')
     }
 
@@ -168,6 +167,17 @@ const Chat = () => {
         if (e.keyCode === 13) {
             handleSend();
         }
+    }
+
+    function handleInputChange(event) {
+        const fileUploaded = event.target.files[0];
+        const sizeMB = fileUploaded.size / 1024000;
+        setMessage(`Attached: ${fileUploaded.name} (${sizeMB.toFixed(2)} MB)`);
+        setDisabled(true);
+    }
+
+    function handleAttachClick(event) {
+        hiddenFileInput.current.click();
     }
 
     // Return
@@ -198,10 +208,17 @@ const Chat = () => {
                             <div class="fields">
                                 <div class="username">
                                     <input id="msg" type="text" class="message" placeholder="What's up?"
+                                        disabled={
+                                            (disabled) ? "disabled" : ""
+                                        }
                                         value={message}
                                         onChange={handleMessageChange}
                                         onKeyDown={handleMessageKeyDown}/>
-                                <button class="iconbutton attach"><FontAwesomeIcon icon={faPaperclip} size="240x" /></button>
+                                    <input type="file" id="file-input" class="fileinput"
+                                        ref={hiddenFileInput}
+                                        onChange={handleInputChange}/>
+                                    <button class="iconbutton attach"
+                                        onClick={handleAttachClick}><FontAwesomeIcon icon={faPaperclip}/></button>
                                 </div>
                             </div>
                         </div>
