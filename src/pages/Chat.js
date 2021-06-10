@@ -140,7 +140,7 @@ const Chat = () => {
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt">Click to decrypt {decryptedName}.</span></p>
+                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data)}}>Click to decrypt {decryptedName}.</span></p>
                 </div>
             ]);
             playNotification();
@@ -148,6 +148,34 @@ const Chat = () => {
         } else {
             console.log(`Not my message: ${msg.name}`)
         }
+    }
+
+    function handleDecryptClick(encryptedData) {
+        const decryptedData = crypt.decryptMessage(encryptedData, state.key);
+        const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+          
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+              const slice = byteCharacters.slice(offset, offset + sliceSize);
+          
+              const byteNumbers = new Array(slice.length);
+              for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+              }
+          
+              const byteArray = new Uint8Array(byteNumbers);
+              byteArrays.push(byteArray);
+            }
+          
+            const blob = new Blob(byteArrays, {type: contentType});
+            return blob;
+          }
+          const blob = b64toBlob(decryptedData);
+          const blobUrl = window.URL.createObjectURL(blob);
+          
+          window.open = blobUrl;
+          
     }
 
     function broadcastLeave() {
