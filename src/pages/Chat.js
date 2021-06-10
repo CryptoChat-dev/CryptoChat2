@@ -204,12 +204,22 @@ const Chat = () => {
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
             console.log("[Send Button] Base64 encoded data. Sending...")
-
+            console.log(reader)
+            socket.emit('file event', JSON.parse(JSON.stringify({
+                "roomName": state.roomName,
+                "name": crypt.encryptMessage(file.name, state.key),
+                "data": crypt.encryptMessage(reader.result, state.key)
+            })))
+            console.log("[Send Button] Data sent.");
+            setMessage('');
+            setFileSelected(false);
+            setFile(null);
+            setFileObject(null);
             return;
         }
         console.log("[Send Button] Message mode.")
 
-        socket.emit('chat event', JSON.parse(JSON.stringify({ // on leave, broadcast to room
+        socket.emit('chat event', JSON.parse(JSON.stringify({
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
             "message": crypt.encryptMessage(message, state.key)
