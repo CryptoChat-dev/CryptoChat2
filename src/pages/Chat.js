@@ -24,15 +24,26 @@ export const initiateSocket = (room) => {
     socket.emit('join', roomName)
 }
 
-var blobToBase64 = function (blob, callback) {
-    var reader = new FileReader();
-    reader.onload = function () {
-        var dataUrl = reader.result;
-        var base64 = dataUrl.split(',')[1];
-        callback(base64);
-    };
-    reader.readAsDataURL(blob);
-};
+const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
+
 
 const Chat = () => {
     const history = useHistory();
@@ -152,29 +163,11 @@ const Chat = () => {
 
     function handleDecryptClick(encryptedData) {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
-        const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
-            const byteCharacters = atob(b64Data);
-            const byteArrays = [];
-          
-            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-              const slice = byteCharacters.slice(offset, offset + sliceSize);
-          
-              const byteNumbers = new Array(slice.length);
-              for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-              }
-          
-              const byteArray = new Uint8Array(byteNumbers);
-              byteArrays.push(byteArray);
-            }
-          
-            const blob = new Blob(byteArrays, {type: contentType});
-            return blob;
-          }
-          const blob = b64toBlob(decryptedData);
-          const blobUrl = window.URL.createObjectURL(blob);
-          
-          window.open = blobUrl;
+        console.log("[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to blob.")
+        const blob = b64toBlob(decryptedData);
+        const blobUrl = window.URL.createObjectURL(blob);
+        console.log("[Decrypt Button] Blob created.")
+        window.open = blobUrl;
           
     }
 

@@ -215,6 +215,10 @@ h1 {
     color: var(--decrypt-color);
 }
 
+.decrypt:hover {
+    cursor: pointer;
+}
+
 /* Input */
 
 .fileinput {
