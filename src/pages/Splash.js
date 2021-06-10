@@ -149,10 +149,12 @@ const Splash = () => { // State Variables
                                     onChange={
                                         (e) => setKey(e.target.value)
                                     }/>
+                                    <div class="randomize-parent">
                                 <div class="randomize">
                                     <button class="button randomize" id="randomizer"
                                         onClick={getWordNum}>Random</button>
                                 </div>
+                                    </div>
                             </div>
                             <div class="buttons">
                                 <div class="buttons top">

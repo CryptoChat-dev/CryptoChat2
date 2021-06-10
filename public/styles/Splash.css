@@ -35,11 +35,13 @@ body {
   height: 10vh;
   width: 100vw;
 }
+
 .messagebox-parent {
   width: 100%;
   display: flex;
   justify-content: center;
 }
+
 .messagebox {
   width: 100%;
   display: flex;
@@ -73,6 +75,7 @@ body {
   margin-top: 10%;
   display: flex;
 }
+
 .username {
   width: 50%;
 }
@@ -98,10 +101,12 @@ body {
   cursor: pointer;
   outline: 0;
 }
+
 .modalButton:hover {
   color: var(--txt-color);
   transform: translateY(-7px);
 }
+
 .modalButton.red {
   width: 140px;
   height: 45px;
@@ -119,6 +124,7 @@ body {
   cursor: pointer;
   outline: 0;
 }
+
 .modalButton-red:hover {
   color: var(--txt-color);
   transform: translateY(-7px);
@@ -131,10 +137,18 @@ body {
   justify-content: space-evenly;
 }
 
+.randomize-parent {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-left: 3px;
+}
+
 @media only screen and (max-width: 600px) {
   .username {
     width: 90%;
   }
+
   .popUpBox {
     width: 90%;
   }
