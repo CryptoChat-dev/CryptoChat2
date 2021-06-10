@@ -43,7 +43,17 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
     const blob = new Blob(byteArrays, {type: contentType});
     return blob;
   }
+  function saveBlob(blob, fileName) {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
 
+    var url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
 
 const Chat = () => {
     const history = useHistory();
@@ -151,7 +161,7 @@ const Chat = () => {
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data)}}>Click to decrypt {decryptedName}.</span></p>
+                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data, decryptedName)}}>Click to decrypt {decryptedName}.</span></p>
                 </div>
             ]);
             playNotification();
@@ -161,13 +171,13 @@ const Chat = () => {
         }
     }
 
-    function handleDecryptClick(encryptedData) {
+    function handleDecryptClick(encryptedData, decryptedName) {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
         console.log("[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to blob.")
         const blob = b64toBlob(decryptedData);
         const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.")
-        window.location = blobUrl;
+        saveBlob(blob, decryptedName)
     }
 
     function broadcastLeave() {
