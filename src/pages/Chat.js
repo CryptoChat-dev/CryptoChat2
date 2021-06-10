@@ -158,11 +158,12 @@ const Chat = () => {
         console.log(msg)
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
         var decryptedName = crypt.decryptMessage(msg.name, state.key);
+        var decryptedMIME = crypt.decryptMessage(msg.type, state.key);
         if (decryptedUsername !== '') { // if the username is an empty value, stop
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data, decryptedName)}}>Click to decrypt {decryptedName}.</span></p>
+                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data, decryptedName, decryptedMIME)}}>Click to decrypt {decryptedName}.</span></p>
                 </div>
             ]);
             playNotification();
@@ -172,10 +173,10 @@ const Chat = () => {
         }
     }
 
-    function handleDecryptClick(encryptedData, decryptedName) {
+    function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
         console.log("[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to blob.")
-        const blob = b64toBlob(decryptedData);
+        const blob = b64toBlob(decryptedData, decryptedMIME);
         const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.")
         saveBlob(blob, decryptedName)
