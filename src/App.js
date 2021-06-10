@@ -13,34 +13,33 @@ const Legal = React.lazy(() => import ('./pages/Legal.js'))
 const Terms = React.lazy(() => import ('./pages/legal/Terms.js'))
 const Privacy = React.lazy(() => import ('./pages/legal/Privacy.js'))
 
-class App extends React.Component {
+const App = ({hideLoader}) => {
+    React.useEffect(hideLoader, []);
 
-    render() {
-        return (
-            <LazyLoad>
-                <Suspense fallback={Loading}>
-                    <Router>
-                        <Store>
-                            <div className="App">
-                                <Switch>
-                                    <Route exact path="/"
-                                        component={Splash}/>
-                                    <Route path="/chat"
-                                        component={Chat}/>
-                                    <Route exact path="/legal"
-                                        component={Legal}/>
-                                    <Route path="/terms"
-                                        component={Terms}/>
-                                    <Route path="/privacy"
-                                        component={Privacy}/>
-                                </Switch>
-                            </div>
-                        </Store>
-                    </Router>
-                </Suspense>
-            </LazyLoad>
-        )
-    }
+    return (
+        <LazyLoad>
+            <Suspense fallback={Loading}>
+                <Router>
+                    <Store>
+                        <div className="App">
+                            <Switch>
+                                <Route exact path="/"
+                                    component={Splash}/>
+                                <Route path="/chat"
+                                    component={Chat}/>
+                                <Route exact path="/legal"
+                                    component={Legal}/>
+                                <Route path="/terms"
+                                    component={Terms}/>
+                                <Route path="/privacy"
+                                    component={Privacy}/>
+                            </Switch>
+                        </div>
+                    </Store>
+                </Router>
+            </Suspense>
+        </LazyLoad>
+    )
 }
 
 export default App;

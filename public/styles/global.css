@@ -129,9 +129,11 @@ h1 {
     background-color: #e52ecd;
     box-shadow: 0 15px 20px 0 #e52ecd;
 }
+
 .button.join {
     float: right;
 }
+
 .button.join:hover {
     background-color: #2ee52e;
     box-shadow: 0 15px 20px 0 #2ee52e;
@@ -139,22 +141,50 @@ h1 {
 }
 
 .button.randomize {
-    background: rgb(11,95,247);
+    background: rgb(11, 95, 247);
     color: white;
-    background: linear-gradient(72deg, rgba(11,95,247,1) 0%, rgba(9,109,121,1) 36%, rgba(31,9,121,1) 100%);
+    background: linear-gradient(72deg, rgba(11, 95, 247, 1) 0%, rgba(9, 109, 121, 1) 36%, rgba(31, 9, 121, 1) 100%);
 }
 
-.button.randomize:hover{
+.button.randomize:hover {
     box-shadow: 0 15px 20px 0 purple;
     color: white;
-    background: rgb(11,95,247);
+    background: rgb(11, 95, 247);
 }
 
+.loader {
+    position: absolute;
+    top: calc(50% - 4em);
+    left: calc(50% - 4em);
+    width: 6em;
+    height: 6em;
+    border: 1.1em solid var(--txt-color);
+    border-left: 1.1em solid #000000;
+    border-radius: 50%;
+    animation: load8 1.1s infinite linear;
+    transition: opacity 0.3s;
+}
 
-  
+.loader--hide {
+    opacity: 0;
+}
+
+@keyframes load8 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* Classes for Headings */
 
-.title.splash {margin-bottom: 0;}
+.title.splash {
+    margin-bottom: 0;
+}
+
 .subtitle {
     text-align: center;
     font-weight: lighter;
