@@ -227,13 +227,14 @@ const Chat = () => {
 
             // Define the FileReader which is able to read the contents of Blob
             var reader = new FileReader();
-
+            
+            reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
+            
             reader.onload = function () {
                 // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
             };
 
-            reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
             console.log("[Send Button] Base64 encoded data. Sending...")
             console.log(reader.result)
             socket.emit('file event', JSON.parse(JSON.stringify({
