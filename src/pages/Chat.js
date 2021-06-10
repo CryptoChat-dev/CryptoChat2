@@ -55,6 +55,12 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
     window.URL.revokeObjectURL(url);
 };
 
+function decodeB64Blob(encodedBlobData) {
+    var array = encodedBlobData.split(",");
+    array[1] = atob(array[1]);
+    return array.join(',')
+}
+
 const Chat = () => {
     const history = useHistory();
     const divRef = useRef(null);
@@ -179,7 +185,7 @@ const Chat = () => {
         const blob = b64toBlob(decryptedData, decryptedMIME);
         const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.")
-        saveBlob(blob, decryptedName)
+        saveBlob(decodeB64Blob(blob), decryptedName)
     }
 
     function broadcastLeave() {
