@@ -24,6 +24,21 @@ export const initiateSocket = (room) => {
     socket.emit('join', roomName)
 }
 
+// Convert file to base64 string
+export const fileToBase64 = (filename, filepath) => {
+    return new Promise(resolve => {
+        var file = new File([filename], filepath);
+        var reader = new FileReader();
+        // Read file content on file loaded event
+        reader.onload = function (event) {
+            resolve(event.target.result);
+        };
+
+        // Convert data to base64
+        reader.readAsDataURL(file);
+    });
+};
+
 const Chat = () => {
     const history = useHistory();
     const divRef = useRef(null);
@@ -37,6 +52,7 @@ const Chat = () => {
 
     const [fileSelected, setFileSelected] = React.useState(false);
     const [file, setFile] = React.useState('');
+    const [fileObject, setFileObject] = React.useState(null);
 
     const [received, setReceived] = React.useState([]);
     const [joinedSent, setJoinedSent] = React.useState(false);
@@ -157,9 +173,19 @@ const Chat = () => {
     }
 
     function handleSend() {
+        console.log("[Send Button] Clicked.")
         if (message === '') {
+            console.log("[Send Button] Message is empty. Returning.")
             return;
         }
+
+        if (fileSelected === true) {
+            console.log("[Send Button] Attachment mode.");
+            fileToBase64(file.name, )
+            return;
+        }
+        console.log("[Send Button] Message mode.")
+
         socket.emit('chat event', JSON.parse(JSON.stringify({ // on leave, broadcast to room
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
@@ -177,18 +203,28 @@ const Chat = () => {
 
     function handleInputChange(event) {
         setFileSelected(true);
+        var binaryData = [];
+        binaryData.push(event.target.files[0]);
+        setFileObject(window.URL.createObjectURL(new Blob(binaryData, {type: "application/png"})))
         var thisFile = event.target.files[0];
         setFile(thisFile);
         const sizeMB = thisFile.size / 1024000;
-        setMessage(`Attached: ${thisFile.name} (${sizeMB.toFixed(2)} MB)`);
+        setMessage(`Attached: ${
+            thisFile.name
+        } (${
+            sizeMB.toFixed(2)
+        } MB)`);
         setDisabled(true);
         setMessageIcon('faTimes');
     }
 
     function handleMessageButtonClick(event) {
+        console.log("[Message Button] Clicked.")
         if (messageIcon === 'faPaperclip' && fileSelected === false) {
+            console.log("[Message Button] Attachment selection mode.")
             hiddenFileInput.current.click();
         } else if (messageIcon === 'faTimes' && fileSelected === true) {
+            console.log("[Message Button] Attachment removal mode.")
             setFileSelected(false);
             setFile(null);
             setMessage('');
@@ -199,63 +235,65 @@ const Chat = () => {
 
     // Return
 
-    return (
-        <React.Fragment>
-            <Helmet>
-                <link rel="stylesheet" href="/styles/Chat.css"/> {/* <script src="/crypto-js/aes.js"></script> */} </Helmet>
-            <div class="chatbox-parent" id="chatbox-parent">
-                <div class="chatbox-child">
-                    <div class="chatbox-header">
-                        <p class="keyname" id="keyname">Room Key: {
-                            state.key
-                        }</p>
-                        <h1 class="chatbox-title">CryptoChat</h1>
-                        <h2 class="chatbox-subtitle">
-                            A stunning encrypted chat webapp.
-                        </h2>
-                    </div>
-                    <div class="chatbox-messages">
-                        <div class="messageviewer-parent">
-                            <div id="messageviewer" name="messageviewer" class="messageviewer">
-                                <div class="messagetxt">
-                                    {received}</div>
-                            </div>
-                        </div>
-                        <div class="messagebox">
-                            <div class="fields">
-                                <div class="username">
-                                    <input id="msg" type="text" class="message" placeholder="What's up?"
-                                        disabled={
-                                            (disabled) ? "disabled" : ""
-                                        }
-                                        value={message}
-                                        onChange={handleMessageChange}
-                                        onKeyDown={handleMessageKeyDown}/>
-                                    <input type="file" id="file-input" class="fileinput"
-                                        ref={hiddenFileInput}
-                                        onChange={handleInputChange}/>
-                                    <button class="iconbutton attach"
-                                        onClick={handleMessageButtonClick}>{messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>}
-                                        {messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes} />}</button>
-                                </div>
-                            </div>
+    return (<React.Fragment>
+        <Helmet>
+            <link rel="stylesheet" href="/styles/Chat.css"/>
+        </Helmet>
+        <div class="chatbox-parent" id="chatbox-parent">
+            <div class="chatbox-child">
+                <div class="chatbox-header">
+                    <p class="keyname" id="keyname">Room Key: {
+                        state.key
+                    }</p>
+                    <h1 class="chatbox-title">CryptoChat</h1>
+                    <h2 class="chatbox-subtitle">
+                        A stunning encrypted chat webapp.
+                    </h2>
+                    {/* <img src={fileObject}></img> */}
+                </div>
+                <div class="chatbox-messages">
+                    <div class="messageviewer-parent">
+                        <div id="messageviewer" name="messageviewer" class="messageviewer">
+                            <div class="messagetxt"> {received}</div>
                         </div>
                     </div>
-                    <div class="chatbox-buttons">
-                        <button class="button theme" id="toggler"
-                            onClick={changeTheme}>
-                            {
-                            state.oppositeTheme
-                        }</button>
-                        <button class="button send" id="sendbutton"
-                            onClick={handleSend}>Send</button>
-                        <button class="button leave" id="leavebutton"
-                            onClick={handleLeave}>Leave</button>
+                    <div class="messagebox">
+                        <div class="fields">
+                            <div class="username">
+                                <input id="msg" type="text" class="message" placeholder="What's up?"
+                                    disabled={
+                                        (disabled) ? "disabled" : ""
+                                    }
+                                    value={message}
+                                    onChange={handleMessageChange}
+                                    onKeyDown={handleMessageKeyDown}/>
+                                <input type="file" id="file-input" class="fileinput"
+                                    ref={hiddenFileInput}
+                                    onChange={handleInputChange}/>
+                                <button class="iconbutton attach"
+                                    onClick={handleMessageButtonClick}> {
+                                    messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
+                                }
+                                    {
+                                    messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
+                                }</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="chatbox-buttons">
+                    <button class="button theme" id="toggler"
+                        onClick={changeTheme}> {
+                        state.oppositeTheme
+                    }</button>
+                    <button class="button send" id="sendbutton"
+                        onClick={handleSend}>Send</button>
+                    <button class="button leave" id="leavebutton"
+                        onClick={handleLeave}>Leave</button>
+                </div>
             </div>
+        </div>
 
-        </React.Fragment>
-    )
+    </React.Fragment>)
 }
 export default Chat;
