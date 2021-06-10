@@ -207,6 +207,7 @@ const Chat = () => {
             console.log(reader)
             socket.emit('file event', JSON.parse(JSON.stringify({
                 "roomName": state.roomName,
+                "user_name": crypt.encryptMessage(state.username, state.key),
                 "name": crypt.encryptMessage(file.name, state.key),
                 "data": crypt.encryptMessage(reader.result, state.key)
             })))
