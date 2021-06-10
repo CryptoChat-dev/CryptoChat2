@@ -4,21 +4,14 @@ import LazyLoad from 'react-lazyload';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 // Components
-// import Splash from './pages/Splash.js';
-// import Chat from './pages/Chat.js';
-// import Legal from './pages/Legal.js';
-// import Terms from './pages/legal/Terms.js';
-// import Privacy from './pages/legal/Privacy.js';
 import Loading from './Components/Loading';
 import Store from './Components/Store'
 
 const Splash = React.lazy(() => import ('./pages/Splash.js'))
 const Chat = React.lazy(() => import ('./pages/Chat.js'))
 const Legal = React.lazy(() => import ('./pages/Legal.js'))
-const Terms = React.lazy(() => import ('./pages/Terms.js'))
-const Privacy = React.lazy(() => import ('./pages/Privacy.js'))
-// const Splash = React.lazy(() => import('./pages/Splash.js'))
-
+const Terms = React.lazy(() => import ('./pages/legal/Terms.js'))
+const Privacy = React.lazy(() => import ('./pages/legal/Privacy.js'))
 
 class App extends React.Component {
 
