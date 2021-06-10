@@ -58,6 +58,7 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
 function decodeB64Blob(encodedBlobData) {
     var array = encodedBlobData.toString().split(",");
     array[1] = atob(btoa(array[1]));
+    console.log(array[1])
     return array.join(',')
 }
 
