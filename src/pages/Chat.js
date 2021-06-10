@@ -9,7 +9,6 @@ import notificationSound from '../assets/notification.mp3';
 import CryptoJS from 'crypto-js';
 
 // Socket.IO
-// import {socket} from "../service/socket";
 import io from "socket.io-client";
 let socket;
 
