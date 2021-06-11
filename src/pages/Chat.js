@@ -320,9 +320,11 @@ const Chat = () => {
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
             var randomuid = randomUID(6);
-            var newSentFiles = sentFiles.concat(randomuid);
-            setSentFiles(newSentFiles);
-            
+            setSentFiles([
+                ...sentFiles,
+                randomuid
+            ]);
+
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = retrieveB64FromBlob(reader.result);
@@ -365,6 +367,7 @@ const Chat = () => {
                 setMessageIcon('faPaperclip')
                 setDisabled(false);
                 close();
+                console.log(sentFiles)
             };
             return;
         }
