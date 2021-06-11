@@ -98,6 +98,7 @@ const Chat = () => {
         }
         console.log("[Tab] Broadcasting leave.");
         broadcastLeave();
+        window.close();
         return ''; // Legacy method for cross browser support
     };
       
