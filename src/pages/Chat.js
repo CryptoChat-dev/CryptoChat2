@@ -93,13 +93,8 @@ const Chat = () => {
         // Cancel the event
         e.preventDefault();
         console.log("[Tab] Close attempt detected.")
-        if (e) {
-            e.returnValue = ''; // Legacy method for cross browser support
-        }
         console.log("[Tab] Broadcasting leave.");
         broadcastLeave();
-        window.close();
-        return ''; // Legacy method for cross browser support
     };
       
     // Helper Functions
