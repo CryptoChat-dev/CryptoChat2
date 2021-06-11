@@ -203,7 +203,7 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        if (sentFiles.indexOf(Number(msg.uid)) < -1) {
+        if (sentFiles.indexOf(Number(msg.uid)) === -1) {
             return;
         }
 
