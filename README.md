@@ -62,6 +62,8 @@ Bob attaches a very sensitive PDF document on CryptoChat.
 
 Upon clicking the "Send" button, Bob's client encodes the file using Base64 and end-to-end encrypts the text data. Along with the actual file data itself, its MIME type is also encrypted and stored in memory. This end-to-end encrypted data is then sent to the backend webserver using Socket.IO with his end-to-end encrypted username and SHA-512 hashed encryption key as the room key. 
 
+After Bob's client finishes uploading the document, Alice's client downloads the encrypted file content and MIME type. When Alice clicks on the decryption button, her client locally decrypts the file and MIME type information with the decryption key she entered on the splash screen. Her client then decodes the base64 text and creates a Javascript blob object with the included MIME type. This blob object is finally saved to her computer, and Alice can now view the file on her side.
+
 ### Leaving
 
 3. The user leaves the room.
