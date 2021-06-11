@@ -367,7 +367,7 @@ const Chat = () => {
                 setMessageIcon('faPaperclip')
                 setDisabled(false);
                 close();
-                console.log(sentFiles)
+                console.log(state.sentFiles)
             };
             return;
         }
