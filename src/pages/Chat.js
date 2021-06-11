@@ -214,7 +214,6 @@ const Chat = () => {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
         console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
         const blob = b64toBlob(atob(decryptedData), decryptedMIME);
-        const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.");
         console.log(blob)
         saveBlob(blob, decryptedName)
