@@ -203,9 +203,9 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        console.log(sentFiles)
-        console.log(sentFiles.indexOf(Number(msg.uid)))
-        if (sentFiles.indexOf(Number(msg.uid)) > -1) {
+        console.log(state.sentFiles)
+        console.log(state.sentFiles.indexOf(Number(msg.uid)))
+        if (state.sentFiles.indexOf(Number(msg.uid)) > -1) {
             console.log("[File Handler] This is my file. Returning.");
             return;
         }
@@ -320,10 +320,10 @@ const Chat = () => {
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
             var randomuid = randomUID(6);
-            setSentFiles([
-                ...sentFiles,
+            dispatch({type: 'SET_SENT', payload: [
+                ...state.sentFiles,
                 randomuid
-            ]);
+            ]});
 
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 reader.result.replace(/^data:.+;base64,/, '');
