@@ -5,12 +5,13 @@ import App from './App';
 import {useHistory} from 'react-router-dom';
 
 const loader = document.querySelector('.loader');
+const overlay = document.querySelector('.overlay');
 var showLoader;
 var hideLoader;
 
 try {
-    showLoader = () => loader.classList.remove('loader--hide');
-    hideLoader = () => loader.classList.add('loader--hide');
+    showLoader = () => {loader.classList.remove('loader--hide'); overlay.classList.remove('overlay--hide')};
+    hideLoader = () => {loader.classList.add('loader--hide'); overlay.classList.add('overlay--hide')};
 } catch (err) {
     useHistory.push('/');
 }

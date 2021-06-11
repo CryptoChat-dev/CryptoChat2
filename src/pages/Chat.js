@@ -5,6 +5,11 @@ import {useHistory} from 'react-router-dom';
 import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
 
+// ReachUI
+
+import {Dialog} from "@reach/dialog";
+import "@reach/dialog/styles.css"
+
 // Crypto JS
 import CryptoJS from 'crypto-js';
 
@@ -17,6 +22,7 @@ import {faPaperclip, faTimes} from '@fortawesome/free-solid-svg-icons'
 import io from "socket.io-client";
 let socket;
 
+// Loader
 
 export const initiateSocket = (room) => {
     socket = io(process.env.REACT_APP_API);
@@ -24,26 +30,26 @@ export const initiateSocket = (room) => {
     socket.emit('join', roomName)
 }
 
-const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const byteCharacters = atob(btoa(b64Data));
     const byteArrays = [];
-  
+
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-  
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-  
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
     }
-  
+
     const blob = new Blob(byteArrays, {type: contentType});
     return blob;
-  }
-  function saveBlob(blob, fileName) {
+}
+function saveBlob(blob, fileName) {
     var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
@@ -79,6 +85,10 @@ const Chat = () => {
     const [joinedSent, setJoinedSent] = React.useState(false);
     const [disabled, setDisabled] = React.useState(false);
     var themeSetting;
+
+    const [showDialog, setShowDialog] = React.useState(false);
+    const open = () => setShowDialog(true);
+    const close = () => setShowDialog(false);
 
 
     // Helper Functions
@@ -149,7 +159,8 @@ const Chat = () => {
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p> <b>{decryptedUsername}</b>: {decryptedMessage}</p>
+                    <p>
+                        <b> {decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);
             playNotification();
@@ -168,13 +179,24 @@ const Chat = () => {
             setReceived((messages) => [
                 ...messages,
                 <div ref={divRef}>
-                    <p><b>{decryptedUsername} sent an attachment</b>. <span class="decrypt" onClick={() => {handleDecryptClick(msg.data, decryptedName, decryptedMIME)}}>Click to decrypt {decryptedName}.</span></p>
+                    <p>
+                        <b> {decryptedUsername}
+                            sent an attachment</b>.
+                        <span class="decrypt"
+                            onClick={
+                                () => {
+                                    handleDecryptClick(msg.data, decryptedName, decryptedMIME)
+                                }
+                        }>Click to decrypt {decryptedName}.</span>
+                    </p>
                 </div>
             ]);
             playNotification();
             divRef.current.scrollIntoView({behavior: 'smooth'});
         } else {
-            console.log(`Not my message: ${msg.name}`)
+            console.log(`Not my message: ${
+                msg.name
+            }`)
         }
     }
 
@@ -230,18 +252,20 @@ const Chat = () => {
         }
 
         if (fileSelected === true) {
+            open();
             console.log("[Send Button] Attachment mode.");
 
             // Define the FileReader which is able to read the contents of Blob
             var reader = new FileReader();
-            
+
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
-            
-            reader.onload = function () {
-                // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
+
+            reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = retrieveB64FromBlob(reader.result);
-                console.log(`[Send Button] Base64 encoded data. Sending ${fileObject.type}.`)
+                console.log(`[Send Button] Base64 encoded data. Sending ${
+                    fileObject.type
+                }.`)
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
@@ -256,6 +280,7 @@ const Chat = () => {
                 setFileObject(null);
                 setMessageIcon('faPaperclip')
                 setDisabled(false);
+                close();
             };
             return;
         }
@@ -367,6 +392,21 @@ const Chat = () => {
                 </div>
             </div>
         </div>
+        <Dialog style={
+                {
+                    backgroundColor: state.modalColor,
+                    minWidth: "calc(min(350px,90%))",
+                    width: "25%",
+                    padding: "2%",
+                    textAlign: "center",
+                    borderRadius: "10px"
+                }
+            }
+            isOpen={showDialog}
+            onDismiss={close}>
+            <h1>Uploading File...</h1>
+            <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
+        </Dialog>
 
     </React.Fragment>)
 }
