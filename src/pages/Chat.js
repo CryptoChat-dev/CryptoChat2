@@ -167,7 +167,11 @@ const Chat = () => {
                 </div>
             ]);
             playNotification();
-            divRef.current.scrollIntoView({behavior: 'smooth'});
+            try {
+                divRef.current.scrollIntoView({behavior: 'smooth'});
+            } catch(err) {
+                return;
+            }
         } else {
             console.log(`Not my message: ${msg}`)
         }
@@ -184,7 +188,7 @@ const Chat = () => {
                 <div ref={divRef}>
                     <p>
                         <b> {decryptedUsername}
-                            sent an attachment</b>.
+                             sent an attachment</b>.
                         <span class="decrypt"
                             onClick={
                                 () => {
@@ -195,7 +199,11 @@ const Chat = () => {
                 </div>
             ]);
             playNotification();
-            divRef.current.scrollIntoView({behavior: 'smooth'});
+            try {
+                divRef.current.scrollIntoView({behavior: 'smooth'});
+            } catch(err) {
+                return;
+            }
         } else {
             console.log(`Not my message: ${
                 msg.name
