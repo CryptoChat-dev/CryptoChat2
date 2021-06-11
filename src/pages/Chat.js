@@ -203,10 +203,10 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        if (sentFiles.indexOf(msg.uid) < -1) {
+        if (sentFiles.indexOf(Number(msg.uid)) < -1) {
             return;
         }
-        
+
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
