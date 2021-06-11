@@ -203,9 +203,13 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
+        console.log(sentFiles.indexOf(Number(msg.uid)))
         if (sentFiles.indexOf(Number(msg.uid)) === -1) {
+            console.log("[File Handler] This is my file. Returning.");
             return;
         }
+
+        console.log("[File Handler] External file detected.");
 
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
