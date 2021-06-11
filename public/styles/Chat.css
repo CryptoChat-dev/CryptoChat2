@@ -1,3 +1,23 @@
+/* HTML Elements */
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+p {
+    word-wrap: break-word;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    text-decoration-color: none;
+}
+
+/* Divs */
+
 .chatbox-parent {
     display: flex;
     justify-content: center;
@@ -20,6 +40,105 @@
     box-shadow: 20px 20px 60px var(--first-box-shadow),
         -20px -20px 60px var(--second-box-shadow);
 }
+
+.blur {
+    filter: blur(8px);
+    transition-duration: .1s;
+    width: 70%;
+    margin-left: 2%;
+}
+
+.blur:hover {
+    filter: none;
+}
+
+.chatbox-messages {
+    height: 75%;
+}
+
+.chatbox-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 5%;
+    margin-bottom: 3%;
+    margin-right: 5%;
+}
+
+.messagebox {
+    width: 100%;
+    padding: 0 5px 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.messagebox input {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 18px;
+    margin-left: 1%;
+    padding: 20px 10px 20px 5px;
+    margin-right: 1%;
+    width: 95%;
+    color: var(--txt-color);
+}
+
+.username {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    box-shadow: inset 8px 8px 8px var(--inside-box-shadow-one),
+        inset -8px -8px 8px var(--inside-box-shadow-two);
+    width: 50em;
+}
+
+.messageviewer {
+    height: 80%;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    box-shadow: inset 8px 8px 8px var(--inside-box-shadow-one),
+        inset -8px -8px 8px var(--inside-box-shadow-two);
+    width: 45em;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 18px;
+    padding: 20px 10px 20px 9px;
+    overflow: scroll;
+    overflow-x: hidden;
+    color: var(--txt-color);
+}
+
+.messageviewer p {
+    margin-left: 5%;
+}
+
+.messageviewer-parent {
+    display: flex;
+    justify-content: center;
+    height: 80%;
+}
+
+.message {
+    width: 50em;
+}
+
+.info {
+    background: var(--main-background);
+    box-shadow: 20px 20px 60px var(--first-box-shadow),
+        -20px -20px 60px var(--second-box-shadow);
+}
+
+/* React Elements */
+
+.emojiPicker {
+    position: relative;
+    z-index: 99 !important;
+    float: right;
+}
+
+/* Text */
 
 .chatbox-title {
     font-family: Arial, Helvetica, sans-serif;
@@ -48,99 +167,7 @@
     line-height: 0.75em;
 }
 
-.chatbox-messages {
-    height: 75%;
-}
-
-.chatbox-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 5%;
-    margin-bottom: 3%;
-    margin-right: 5%;
-}
-
-a {
-    text-decoration: none;
-    text-decoration-color: none;
-}
-
-.messagebox {
-    width: 100%;
-    padding: 0 5px 5px;
-    display: flex;
-    justify-content: center;
-}
-
-.messagebox input {
-    border: none;
-    outline: none;
-    background: none;
-    font-size: 18px;
-    margin-left: 1%;
-    padding: 20px 10px 20px 5px;
-    margin-right: 1%;
-    width: 95%;
-    color: var(--txt-color);
-}
-
-.username {
-    display: flex;
-    justify-content:center;
-    margin-bottom: 30px;
-    border-radius: 25px;
-    box-shadow: inset 8px 8px 8px var(--inside-box-shadow-one),
-        inset -8px -8px 8px var(--inside-box-shadow-two);
-    width: 50em;
-}
-
-.messageviewer {
-    height: 80%;
-    margin-bottom: 30px;
-    border-radius: 25px;
-    box-shadow: inset 8px 8px 8px var(--inside-box-shadow-one),
-        inset -8px -8px 8px var(--inside-box-shadow-two);
-    width: 45em;
-    border: none;
-    outline: none;
-    background: none;
-    font-size: 18px;
-    padding: 20px 10px 20px 9px;
-    overflow: scroll;
-    overflow-x: hidden;
-    color: var(--txt-color);
-}
-
-p {
-    word-wrap: break-word;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.messageviewer p {
-    margin-left: 5%;
-}
-
-.messageviewer-parent {
-    display: flex;
-    justify-content: center;
-    height: 80%;
-}
-
-.message {
-    width: 50em;
-}
-
-.info {
-    background: var(--main-background);
-    box-shadow: 20px 20px 60px var(--first-box-shadow),
-        -20px -20px 60px var(--second-box-shadow);
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Media Queries */
 
 @media only screen and (max-width: 800px) {
     .chatbox-child {
@@ -193,13 +220,11 @@ body {
     .popUpBox {
         width: 60%;
     }
-}
-.emojiPicker {
-    position: relative;
-    z-index: 99 !important;
-    float: right;
-}
 
+    .blur {
+        filter: none;
+    }
+}
 
 @media only screen and (max-height: 730px) {
     .chatbox-messages {

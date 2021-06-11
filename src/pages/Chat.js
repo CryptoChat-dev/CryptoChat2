@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useRef} from 'react';
 import {Helmet} from 'react-helmet';
-import {Context} from '../Components/Store';
 import {useHistory} from 'react-router-dom';
+import {Context} from '../Components/Store';
 import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
 import Picker from 'emoji-picker-react';
@@ -91,17 +91,21 @@ const Chat = () => {
 
     useEffect(() => {
         try {
+            // Subscribe to socket events
             socket.on('chat response', messageHandler);
             socket.on('file response', fileHandler);
             socket.on('join response', joinHandler);
             socket.on('leave response', leaveHandler);
         } catch (err) {
+            // If there's an error, cancel.
             history.push('/');
             return;
         }
         return() => {
+            // Unsubscribe to responses
             socket.off('chat response');
             socket.off('file response');
+            socket.off('join response')
             socket.off('leave response');
         }
     }, []);
@@ -162,15 +166,22 @@ const Chat = () => {
                         <b> {decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);
-            playNotification();
             try {
                 divRef.current.scrollIntoView({behavior: 'smooth'});
             } catch(err) {
                 return;
             }
         } else {
+            setReceived((messages) => [
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
             console.log(`Not my message: ${msg}`)
         }
+        playNotification();
     }
 
     function fileHandler(msg) {
@@ -200,6 +211,13 @@ const Chat = () => {
                 return;
             }
         } else {
+            setReceived((messages) => [
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
             console.log(`Not my message: ${
                 msg.name
             }`)
@@ -242,7 +260,6 @@ const Chat = () => {
         setMessage(e.target.value);
     }
 
-
     function handleLeave() {
         broadcastLeave();
         history.push('/');
@@ -273,7 +290,7 @@ const Chat = () => {
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
 
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
-                var b64 = reader.result.replace(/^data:.+;base64,/, '');
+                reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = retrieveB64FromBlob(reader.result);
                 console.log(`[Send Button] Base64 encoded data. Sending ${
                     fileObject.type
@@ -405,9 +422,11 @@ const Chat = () => {
         <div class="chatbox-parent" id="chatbox-parent">
             <div class="chatbox-child">
                 <div class="chatbox-header">
-                    <p class="keyname" id="keyname">Room Key: {
-                        state.key
-                    }</p>
+                    <div class="blur">
+                        <p class="keyname" id="keyname">Room Key: {
+                            state.key
+                        }</p>
+                    </div>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
