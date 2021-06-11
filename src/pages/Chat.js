@@ -347,6 +347,11 @@ const Chat = () => {
             default:
                 socketEmit(message);
         }
+        try {
+            divRef.current.scrollIntoView({behavior: 'smooth'});
+        } catch(err) {
+            return;
+        }
         setMessage('')
     }
 
