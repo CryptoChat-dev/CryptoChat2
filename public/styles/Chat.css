@@ -136,6 +136,7 @@ a {
     position: relative;
     z-index: 99 !important;
     float: right;
+    color: var(--txt-color);
 }
 
 /* Text */

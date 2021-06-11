@@ -15,9 +15,9 @@ import {scorePassword, getWordNum} from '../utils/password';
 // Code
 
 const Splash = () => {
+    const history = useHistory();
     
     // State Variables
-    const history = useHistory();
 
     const [state, dispatch] = useContext(Context);
     const [key, setKey] = React.useState('');
@@ -30,6 +30,8 @@ const Splash = () => {
     const [showEVDialog, setShowEVDialog] = React.useState(false);
     const openEV = () => setShowEVDialog(true);
     const closeEV = () => setShowEVDialog(false);
+
+    // Handler functions
 
     var themeSetting;
 
@@ -48,27 +50,33 @@ const Splash = () => {
     }
 
     function handleJoin() {
-        if (username.length < 1 || key.length < 1) { // setIsOpen(true);
-            return;
-        }
+        // Handle join click
+
+        // Store the username and key in the global/parent state.
         dispatch({type: 'SET_USERNAME', payload: username});
         dispatch({type: 'SET_KEY', payload: key});
-        history.push('/chat');
+        history.push('/chat'); // Go to the chat page.
     }
 
     function screening() {
         if (key.length < 1 || username.length < 1) {
+            // If there are empty values, stop the user.
             openEV();
             return;
         }
-        var score = scorePassword(key);
-        console.log(score);
+
+        // Score the key.
+        var score = scorePassword(key);        
         if (score < 80) {
+            // If key scores less than 80% strength, warn the user.
             open();
             return;
         }
+
         handleJoin();
     }
+
+    // Return JSX
 
     return (
         <React.Fragment>

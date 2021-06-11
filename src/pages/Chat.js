@@ -33,8 +33,10 @@ let socket;
 const Chat = () => {
     const history = useHistory();
     const divRef = useRef(null);
-    const [playNotification] = useSound(notificationSound);
     const hiddenFileInput = React.useRef(null);
+
+    // State Varibles
+    const [playNotification] = useSound(notificationSound);
 
     const [state, dispatch] = useContext(Context);
 
@@ -60,6 +62,7 @@ const Chat = () => {
     const openTL = () => setShowDialogTL(true);
     const closeTL = () => setShowDialogTL(false);
 
+    // Before the tab closes:
     window.onbeforeunload = (event) => {
         const e = event || window.event;
         // Cancel the event
@@ -71,21 +74,25 @@ const Chat = () => {
 
     useEffect(() => {
         if (state.key === null || state.username === null) {
+            // If the key or username doesn't exist in the parent state, go to the splash screen.
             history.push('/');
             return;
         }
         
+        // Hash the room key with SHA-512
         var roomName = CryptoJS.SHA512(state.key).toString();
         
+        // Set the room name as the hashed key
         dispatch({type: 'SET_ROOM', payload: roomName});
         
         if (joinedSent === false) {
-            socket = io(process.env.REACT_APP_API);
+            // If the join message hasn't been sent, do it.
+            socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
             socket.emit('join', JSON.parse(JSON.stringify({
                 "roomName": roomName,
                 "user_name": crypt.encryptMessage(state.username, state.key)
-            })));
-            setJoinedSent(true);
+            }))); // Emit the join event
+            setJoinedSent(true); // Don't send the event again
         }
     }, [state.roomName])
 
@@ -111,10 +118,11 @@ const Chat = () => {
     }, []);
 
     function joinHandler(msg) {
-        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        // Handles join responses
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         if (decryptedUsername !== '') { // if the username and message are empty values, stop
             console.log(msg); // for debugging: print the encrypted contents of the response
-            setReceived((messages) => [
+            setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -123,6 +131,7 @@ const Chat = () => {
             ]);
             playNotification();
             try {
+                // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
             } catch(err) {
                 return;
@@ -133,10 +142,11 @@ const Chat = () => {
     }
 
     function leaveHandler(msg) {
-        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        // Handles leave responses
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         if (decryptedUsername !== '') { // if the username and message are empty values, stop
             console.log(msg); // for debugging: print the encrypted contents of the response
-            setReceived((messages) => [
+            setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -145,6 +155,7 @@ const Chat = () => {
             ]);
             playNotification();
             try {
+                // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
             } catch(err) {
                 return;
@@ -155,11 +166,12 @@ const Chat = () => {
     }
 
     function messageHandler(msg) {
-        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
-        var decryptedMessage = crypt.decryptMessage(msg.message, state.key);
+        // Handles incoming message responses
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
+        var decryptedMessage = crypt.decryptMessage(msg.message, state.key); // Decrypt the message
         if (decryptedUsername !== '' || decryptedMessage !== '') { // if the username and message are empty values, stop
             console.log(msg); // for debugging: print the encrypted contents of the response
-            setReceived((messages) => [
+            setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -167,12 +179,13 @@ const Chat = () => {
                 </div>
             ]);
             try {
+                // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
             } catch(err) {
                 return;
             }
         } else {
-            setReceived((messages) => [
+            setReceived((messages) => [// Display a decryption error
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -185,12 +198,13 @@ const Chat = () => {
     }
 
     function fileHandler(msg) {
-        console.log(msg)
-        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
-        var decryptedName = crypt.decryptMessage(msg.name, state.key);
-        var decryptedMIME = crypt.decryptMessage(msg.type, state.key);
+        // Handles incoming file responses
+        console.log(msg); // Print file response for debugging
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
+        var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
+        var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
         if (decryptedUsername !== '') { // if the username is an empty value, stop
-            setReceived((messages) => [
+            setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -198,6 +212,8 @@ const Chat = () => {
                         <span class="decrypt"
                             onClick={
                                 () => {
+                                    // Pass the encrypted file data, decrypted name and decrypted MIME
+                                    // to the file decryption/save function
                                     handleDecryptClick(msg.data, decryptedName, decryptedMIME)
                                 }
                         }> Click to decrypt {decryptedName}.</span>
@@ -206,12 +222,13 @@ const Chat = () => {
             ]);
             playNotification();
             try {
+                // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
             } catch(err) {
                 return;
             }
         } else {
-            setReceived((messages) => [
+            setReceived((messages) => [// Display a decryption error message
                 ...messages,
                 <div ref={divRef}>
                     <p>
@@ -225,16 +242,18 @@ const Chat = () => {
     }
 
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
-        const decryptedData = crypt.decryptMessage(encryptedData, state.key);
+        // Handles decryption and saving
+        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
         console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-        const blob = b64toBlob(atob(decryptedData), decryptedMIME);
+        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob
         console.log("[Decrypt Button] Blob created.");
-        console.log(blob)
-        saveBlob(blob, decryptedName)
+        console.log(blob); // Print blob for debugging
+        saveBlob(blob, decryptedName); // Save blob
     }
 
     function broadcastLeave() {
-        socket.emit('leave', JSON.parse(JSON.stringify({ // on leave, broadcast to room
+        // Broadcasts a leave event to the room
+        socket.emit('leave', JSON.parse(JSON.stringify({
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key)
         })));
@@ -256,16 +275,13 @@ const Chat = () => {
 
     // Handlers
 
-    function handleMessageChange(e) {
-        setMessage(e.target.value);
-    }
-
     function handleLeave() {
         broadcastLeave();
         history.push('/');
     }
 
     function socketEmit(msg) {
+        // Emits message events
         socket.emit('chat event', JSON.parse(JSON.stringify({
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
@@ -274,14 +290,17 @@ const Chat = () => {
     }
 
     function handleSend() {
+        // Handles send button click
         console.log("[Send Button] Clicked.")
         if (message === '') {
+            // If the message is empty just stop
             console.log("[Send Button] Message is empty. Returning.")
             return;
         }
 
         if (fileSelected === true) {
-            open();
+            // If a file is attached:
+            open(); // Open the loading dialog
             console.log("[Send Button] Attachment mode.");
 
             // Define the FileReader which is able to read the contents of Blob
@@ -295,13 +314,31 @@ const Chat = () => {
                 console.log(`[Send Button] Base64 encoded data. Sending ${
                     fileObject.type
                 }.`)
+                var encryptedName = crypt.encryptMessage(file.name, state.key);
+                var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
+                var encryptedData = crypt.encryptMessage(encodedData, state.key);
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
-                    "name": crypt.encryptMessage(file.name, state.key),
-                    "type": crypt.encryptMessage(fileObject.type, state.key),
-                    "data": crypt.encryptMessage(encodedData, state.key)
+                    "name": encryptedName,
+                    "type": encryptedMIME,
+                    "data": encryptedData
                 })))
+                setReceived((messages) => [// Display a decryption error message
+                    ...messages,
+                    <div ref={divRef}>
+                        <p>
+                            <b>{state.username} sent an attachment.</b>: 
+                            <span class="decrypt"
+                            onClick={
+                                () => {
+                                    // Pass the encrypted file data, decrypted name and decrypted MIME
+                                    // to the file decryption/save function
+                                    handleDecryptClick(encryptedData, file.name, fileObject.type)
+                                }
+                        }> Click to decrypt {file.name}.</span></p>
+                    </div>
+                ]);    
                 console.log("[Send Button] Data sent.");
                 setMessage('');
                 setFileSelected(false);
@@ -316,6 +353,7 @@ const Chat = () => {
         console.log("[Send Button] Message mode.")
 
         switch(message) {
+            // Checks for commands
             case '/?':
             case '/cryptochat':
             case '/commands':
@@ -348,6 +386,7 @@ const Chat = () => {
                 socketEmit(message);
         }
         try {
+            // Scroll down
             divRef.current.scrollIntoView({behavior: 'smooth'});
         } catch(err) {
             return;
@@ -356,32 +395,39 @@ const Chat = () => {
     }
 
     function handleMessageKeyDown(e) {
+        // Handle enter presses in the message box
         if (e.keyCode === 13) {
             handleSend();
         }
     }
 
     function handleInputChange(event) {
+        // Handle file input change
         setFileSelected(true);
         var binaryData = [];
         binaryData.push(event.target.files[0]);
+        
         try {
+            // Try to set the file object to a blob
             setFileObject(new Blob(binaryData, {type: event.target.files[0].type}))
         } catch (err) {
             setFileSelected(false);
             setFileObject(null);
             return;
         }
+
         var thisFile = event.target.files[0];
         setFile(thisFile);
-        const sizeMB = thisFile.size / 1024000;
+        const sizeMB = thisFile.size / 1024000; // Calculate the size in MB
         if (sizeMB > process.env.REACT_APP_SIZE_LIMIT) {
+            // Stop the user if the size of the file is larger than the serverside limit
             openTL();
             setFileSelected(false);
             setFileObject(null);
             setFile(null);
             return;
         }
+
         setMessage(`Attached: ${
             thisFile.name
         } (${
@@ -392,11 +438,13 @@ const Chat = () => {
     }
 
     function handleMessageButtonClick(event) {
+        // Handle the attachment icon click
         console.log("[Message Button] Clicked.")
         if (messageIcon === 'faPaperclip' && fileSelected === false) {
             console.log("[Message Button] Attachment selection mode.")
             hiddenFileInput.current.click();
         } else if (messageIcon === 'faTimes' && fileSelected === true) {
+            // Clear file if the X button is clicked
             console.log("[Message Button] Attachment removal mode.")
             setFileSelected(false);
             setFile(null);
@@ -412,10 +460,6 @@ const Chat = () => {
             return;
         }
         setShowEmojiPicker(true);
-    }
-
-    function onEmojiClick(event, emojiObject) {
-        setMessage(message.concat(emojiObject.emoji))
     }
 
     // Return
@@ -451,7 +495,7 @@ const Chat = () => {
                                         (disabled) ? "disabled" : ""
                                     }
                                     value={message}
-                                    onChange={handleMessageChange}
+                                    onChange={(e) => {setMessage(e.target.value);}}
                                     onKeyDown={handleMessageKeyDown}/>
                                 <input type="file" id="file-input" class="fileinput"
                                     ref={hiddenFileInput}
@@ -467,7 +511,7 @@ const Chat = () => {
                             </div>
                             {showEmojiPicker === true &&
                                 <div class="emojiPicker">
-                                    <Picker onEmojiClick={onEmojiClick}/>
+                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))})}/>
                                 </div>
                             }
                         </div>
