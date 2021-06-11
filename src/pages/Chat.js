@@ -55,13 +55,9 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
     window.URL.revokeObjectURL(url);
 };
 
-function decodeB64Blob(encodedBlobData) {
-    console.log(encodedBlobData)
+function retrieveB64FromBlob(encodedBlobData) {
     var array = encodedBlobData.toString().split(",");
-    console.log(array)
-    array[1] = atob(array[1].toString());
-    console.log(array[1])
-    return array.join(',')
+    return array[1]
 }
 
 const Chat = () => {
@@ -185,11 +181,11 @@ const Chat = () => {
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
         const decryptedData = crypt.decryptMessage(encryptedData, state.key);
         console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-        const blob = b64toBlob(decryptedData, decryptedMIME);
+        const blob = b64toBlob(atob(decryptedData), decryptedMIME);
         const blobUrl = window.URL.createObjectURL(blob);
         console.log("[Decrypt Button] Blob created.");
         console.log(blob)
-        saveBlob(decodeB64Blob(blob), decryptedName)
+        saveBlob(blob, decryptedName)
     }
 
     function broadcastLeave() {
@@ -244,10 +240,8 @@ const Chat = () => {
             reader.onload = function () {
                 // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 var b64 = reader.result.replace(/^data:.+;base64,/, '');
-                var encodedData = reader.result;
-                console.log(reader)
+                var encodedData = retrieveB64FromBlob(reader.result);
                 console.log(`[Send Button] Base64 encoded data. Sending ${fileObject.type}.`)
-                console.log(encodedData)
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
