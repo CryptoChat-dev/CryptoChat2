@@ -114,25 +114,17 @@ const Chat = () => {
             history.push('/');
             return;
         }
-
+        
         var roomName = CryptoJS.SHA512(state.key).toString();
-
+        
         dispatch({type: 'SET_ROOM', payload: roomName});
-
-        socket = io(process.env.REACT_APP_API);
-        socket.emit('join', JSON.parse(JSON.stringify({
-            "roomName": roomName,
-            "user_name": state.username
-        })));
-
+        
         if (joinedSent === false) {
-            var greetingMessage = JSON.parse(JSON.stringify({ // on join, broadcast to room
+            socket = io(process.env.REACT_APP_API);
+            socket.emit('join', JSON.parse(JSON.stringify({
                 "roomName": roomName,
-                "user_name": crypt.encryptMessage(state.username, state.key),
-                "message": crypt.encryptMessage('has joined the room.', state.key)
-            }));
-            console.log(greetingMessage)
-            socket.emit('chat event', greetingMessage);
+                "user_name": state.username
+            })));
             setJoinedSent(true);
         }
     }, [state.roomName])
