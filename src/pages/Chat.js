@@ -339,8 +339,8 @@ const Chat = () => {
                     "uid": randomuid
                 })));
 
-                setSentFiles((files) => [
-                    ...files,
+                setSentFiles([
+                    ...sentFiles,
                     randomuid ]);
 
                 setReceived((messages) => [// Display a decryption error message
