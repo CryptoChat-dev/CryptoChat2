@@ -52,7 +52,7 @@ Bob and Alice enter their different usernames and the same room key on the splas
 
 2. The user sends a message.
 
-Bob says, "Hello Alice!". Bob's client uses the plaintext encryption key to locally encrypt his username (Bob) and message (Hello Alice!). Alice's client receives the end-to-end message from the backend's using Socket.IO and decrypts the encrypted username and message using her local encryption key that she entered on the splash screen.
+Bob says, "Hello Alice!". Bob's client uses the plaintext encryption key to locally encrypt his username (Bob) and message (Hello Alice!). Bob's client sends the SHA-512 hashed version of their encryption key along with his encrypted username and message. Alice's client receives the end-to-end message from the backend's using Socket.IO and decrypts the encrypted username and message using her local encryption key that she entered on the splash screen.
 
 ### File Attachment
 
