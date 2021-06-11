@@ -255,6 +255,7 @@ const Chat = () => {
                 setFile(null);
                 setFileObject(null);
                 setMessageIcon('faPaperclip')
+                setDisabled(false);
             };
             return;
         }
