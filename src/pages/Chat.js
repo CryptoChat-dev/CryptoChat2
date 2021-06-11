@@ -248,6 +248,14 @@ const Chat = () => {
         history.push('/');
     }
 
+    function socketEmit(msg) {
+        socket.emit('chat event', JSON.parse(JSON.stringify({
+            "roomName": state.roomName,
+            "user_name": crypt.encryptMessage(state.username, state.key),
+            "message": crypt.encryptMessage(msg, state.key)
+        })));
+    }
+
     function handleSend() {
         console.log("[Send Button] Clicked.")
         if (message === '') {
@@ -290,12 +298,38 @@ const Chat = () => {
         }
         console.log("[Send Button] Message mode.")
 
-        socket.emit('chat event', JSON.parse(JSON.stringify({
-            "roomName": state.roomName,
-            "user_name": crypt.encryptMessage(state.username, state.key),
-            "message": crypt.encryptMessage(message, state.key)
-        })));
-        setDisabled(false);
+        switch(message) {
+            case '/?':
+            case '/cryptochat':
+            case '/commands':
+            case '/cmds':
+            case '/help':
+                setReceived((messages) => [
+                    ...messages,
+                    <div ref={divRef}>
+                        <p>
+                        <b class="systemmsg">SYSTEM: Only you can see this help message.</b>
+                        <br></br>
+                        <b>CryptoChat Command Help</b><br></br>/shrug - Send a shrug emoticon.<br></br>/tableflip - Send a table flipping emoticon.<br></br>/unflip - Send a table unflipping emoticon.<br></br>/leave - Leave the room.</p>
+                    </div>
+                ]);    
+                break;    
+            case '/leave':
+                broadcastLeave();
+                history.push('/');
+                break;
+            case '/shrug':
+                socketEmit('¯\\_(ツ)_/¯');
+                break;
+            case '/tableflip':
+                socketEmit('(╯°□°）╯︵ ┻━┻');
+                break;
+            case '/unflip':
+                socketEmit('┬─┬ ノ( ゜-゜ノ)');
+                break;
+            default:
+                socketEmit(message);
+        }
         setMessage('')
     }
 

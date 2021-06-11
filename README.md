@@ -1,6 +1,6 @@
 # CryptoChat 2.2 [![CodeFactor](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2/badge)](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2) [![Memes](https://img.shields.io/badge/need-memes-red)](https://img.shields.io/badge/need-memes-red)
 
-[Official Instance](https://cryptochat.dev), [Roadmap](https://github.com/CryptoChat-dev/cryptochat/projects/1), [Legal](https://cryptochat.dev/legal), [Email Us](mailto:contact@cryptochat.dev)
+[Official Instance](https://cryptochat.dev), [Legal](https://cryptochat.dev/legal), [Email Us](mailto:contact@cryptochat.dev)
 
 CryptoChat is a simple, secure and beautiful chat webapp. Chatting has never been so satisfying.
 
