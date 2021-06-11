@@ -203,6 +203,10 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
+        if (sentFiles.indexOf(msg.uid) < -1) {
+            return;
+        }
+        
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
@@ -329,10 +333,11 @@ const Chat = () => {
                     "data": encryptedData,
                     "uid": randomuid
                 })));
+
                 setSentFiles((files) => [
                     ...files,
                     randomuid ]);
-                console.log(sentFiles)
+
                 setReceived((messages) => [// Display a decryption error message
                     ...messages,
                     <div ref={divRef}>
