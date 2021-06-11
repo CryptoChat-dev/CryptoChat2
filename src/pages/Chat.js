@@ -23,6 +23,7 @@ import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
 
 import {b64toBlob, saveBlob, retrieveB64FromBlob} from '../utils/blob';
 import {crypt} from '../utils/encryption.js';
+import { randomUID } from '../utils/password';
 
 // Socket.IO
 import io from "socket.io-client";
@@ -61,6 +62,8 @@ const Chat = () => {
     const [showDialogTL, setShowDialogTL] = React.useState(false);
     const openTL = () => setShowDialogTL(true);
     const closeTL = () => setShowDialogTL(false);
+    
+    const [sentFiles, setSentFiles] = React.useState([]);
 
     // Before the tab closes:
     window.onbeforeunload = (event) => {
@@ -317,13 +320,19 @@ const Chat = () => {
                 var encryptedName = crypt.encryptMessage(file.name, state.key);
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
+                var randomuid = randomUID(6);
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
                     "name": encryptedName,
                     "type": encryptedMIME,
-                    "data": encryptedData
-                })))
+                    "data": encryptedData,
+                    "uid": randomuid
+                })));
+                setSentFiles((files) => [
+                    ...files,
+                    randomuid ]);
+                console.log(sentFiles)
                 setReceived((messages) => [// Display a decryption error message
                     ...messages,
                     <div ref={divRef}>

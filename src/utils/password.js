@@ -52,7 +52,7 @@ function secureRandom(count) {
 
 export function getWordNum() { // get the random words from the dice ware dict
     var wordslist = []
-    for (var i = 0; i < 6; i += 1) {
+    for (var i = 0; i < 6; i++) {
         var newnum = []
         for (var j = 0; j < 5; j += 1) { // roll a 6 sided die
             newnum.push(secureRandom(6) + 1)
@@ -61,4 +61,12 @@ export function getWordNum() { // get the random words from the dice ware dict
         wordslist.push(theword.charAt(0).toUpperCase() + theword.slice(1))
     }
     return wordslist.join('')
+}
+
+export function randomUID(length) {
+    var UIDlist = [];
+    for (var i = 0; i < length; i++) {
+        UIDlist.push(secureRandom(9));
+    }
+    return UIDlist.join('')
 }
