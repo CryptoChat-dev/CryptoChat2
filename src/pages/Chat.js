@@ -319,7 +319,10 @@ const Chat = () => {
             var reader = new FileReader();
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
-
+            var randomuid = randomUID(6);
+            var newSentFiles = sentFiles.concat(randomuid);
+            setSentFiles(newSentFiles);
+            
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = retrieveB64FromBlob(reader.result);
@@ -329,7 +332,6 @@ const Chat = () => {
                 var encryptedName = crypt.encryptMessage(file.name, state.key);
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
-                var randomuid = randomUID(6);
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": crypt.encryptMessage(state.username, state.key),
@@ -338,9 +340,7 @@ const Chat = () => {
                     "data": encryptedData,
                     "uid": randomuid
                 })));
-
-                var newSentFiles = sentFiles.concat(randomuid);
-                setSentFiles(newSentFiles);
+                
 
                 setReceived((messages) => [// Display a decryption error message
                     ...messages,
