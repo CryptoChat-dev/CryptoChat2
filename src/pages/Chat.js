@@ -123,7 +123,7 @@ const Chat = () => {
             socket = io(process.env.REACT_APP_API);
             socket.emit('join', JSON.parse(JSON.stringify({
                 "roomName": roomName,
-                "user_name": state.username
+                "user_name": crypt.encryptMessage(state.username, state.key)
             })));
             setJoinedSent(true);
         }
