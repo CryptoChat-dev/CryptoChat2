@@ -143,7 +143,8 @@ const Chat = () => {
         window.onbeforeunload = broadcastLeave;
         try {
             socket.on('chat response', messageHandler);
-            socket.on('file response', fileHandler)
+            socket.on('file response', fileHandler);
+            socket.on('leave response', leaveHandler);
         } catch (err) {
             history.push('/');
             return;
@@ -151,8 +152,31 @@ const Chat = () => {
         return() => {
             socket.off('chat response');
             socket.off('file response');
+            socket.off('leave response');
         }
     }, []);
+
+    function leaveHandler(msg) {
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        if (decryptedUsername !== '') { // if the username and message are empty values, stop
+            console.log(msg); // for debugging: print the encrypted contents of the response
+            setReceived((messages) => [
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b> {decryptedUsername} has left the room.</b></p>
+                </div>
+            ]);
+            playNotification();
+            try {
+                divRef.current.scrollIntoView({behavior: 'smooth'});
+            } catch(err) {
+                return;
+            }
+        } else {
+            console.log(`Not my message: ${msg}`)
+        }
+    }
 
     function messageHandler(msg) {
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
@@ -220,10 +244,9 @@ const Chat = () => {
     }
 
     function broadcastLeave() {
-        socket.emit('chat event', JSON.parse(JSON.stringify({ // on leave, broadcast to room
+        socket.emit('leave', JSON.parse(JSON.stringify({ // on leave, broadcast to room
             "roomName": state.roomName,
-            "user_name": crypt.encryptMessage(state.username, state.key),
-            "message": crypt.encryptMessage('has left the room.', state.key)
+            "user_name": crypt.encryptMessage(state.username, state.key)
         })));
     }
 
