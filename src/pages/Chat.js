@@ -19,48 +19,17 @@ import CryptoJS from 'crypto-js';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
 
+// Util Imports
+
+import {b64toBlob, saveBlob, retrieveB64FromBlob} from '../utils/blob';
+import {crypt} from '../utils/encryption.js';
+
 // Socket.IO
 import io from "socket.io-client";
 let socket;
 
-// Loader
 
-const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
-    const byteCharacters = atob(btoa(b64Data));
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-}
-function saveBlob(blob, fileName) {
-    var a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
-
-    var url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-};
-
-function retrieveB64FromBlob(encodedBlobData) {
-    var array = encodedBlobData.toString().split(",");
-    return array[1]
-}
-
+// Code
 const Chat = () => {
     const history = useHistory();
     const divRef = useRef(null);
@@ -99,27 +68,6 @@ const Chat = () => {
         console.log("[Tab] Broadcasting leave.");
         broadcastLeave();
     };
-      
-    // Helper Functions
-
-    const crypt = (function () { // encryption function
-        return {
-            encryptMessage: function (messageToencrypt = '', secretkey = '') {
-                var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
-                return encryptedMessage.toString();
-            },
-            decryptMessage: function (encryptedMessage = '', secretkey = '') {
-                try {
-                    var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, secretkey);
-                    var decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
-                    return decryptedMessage;
-                } catch (err) {
-                    console.log("Malformed UTF-8 Data.")
-                    return '';
-                }
-            }
-        };
-    })();
 
     useEffect(() => {
         if (state.key === null || state.username === null) {
