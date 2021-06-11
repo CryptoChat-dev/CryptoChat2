@@ -90,6 +90,9 @@ const Chat = () => {
     const open = () => setShowDialog(true);
     const close = () => setShowDialog(false);
 
+    const [showDialogTL, setShowDialogTL] = React.useState(false);
+    const openTL = () => setShowDialogTL(true);
+    const closeTL = () => setShowDialogTL(false);
 
     // Helper Functions
 
@@ -309,6 +312,10 @@ const Chat = () => {
         var thisFile = event.target.files[0];
         setFile(thisFile);
         const sizeMB = thisFile.size / 1024000;
+        if (sizeMB > process.env.REACT_APP_SIZE_LIMIT) {
+            openTL();
+            return;
+        }
         setMessage(`Attached: ${
             thisFile.name
         } (${
@@ -407,6 +414,26 @@ const Chat = () => {
             <h1>Uploading File...</h1>
             <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
         </Dialog>
+        <Dialog style={
+                {
+                    backgroundColor: state.modalColor,
+                    minWidth: "calc(min(350px,90%))",
+                    width: "25%",
+                    padding: "2%",
+                    textAlign: "center",
+                    borderRadius: "10px"
+                }
+            }
+            isOpen={showDialogTL}
+            onDismiss={closeTL}>
+            <h1>File Too Large</h1>
+            <p>The file you selected is larger than the size limit ({process.env.REACT_APP_SIZE_LIMIT} MB) and cannot be uploaded.</p>
+            <div class="modalButtons">
+            <button class="button"
+                            onClick={closeTL}>Ok</button>
+            </div>
+        </Dialog>
+
 
     </React.Fragment>)
 }
