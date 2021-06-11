@@ -42,7 +42,7 @@ Here's how CryptoChat's encryption works:
 
 During this overview, Bob and Alice will be communicating with each other.
 
-## Joining
+### Joining
 
 1. The user enters their username and room key (which is used for the encryption key).
 
@@ -62,7 +62,7 @@ Bob attaches a very sensitive PDF document on CryptoChat.
 
 Upon clicking the "Send" button, Bob's client encodes the file using Base64 and end-to-end encrypts the text data. Along with the actual file data itself, its MIME type is also encrypted and stored in memory. This end-to-end encrypted data is then sent to the backend webserver using Socket.IO with his end-to-end encrypted username and SHA-512 hashed encryption key as the room key. 
 
-## Leaving
+### Leaving
 
 3. The user leaves the room.
 
