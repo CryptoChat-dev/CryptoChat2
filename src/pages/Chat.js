@@ -187,8 +187,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername}
-                             sent an attachment</b>.
+                        <b> {decryptedUsername} sent an attachment</b>.
                         <span class="decrypt"
                             onClick={
                                 () => {
