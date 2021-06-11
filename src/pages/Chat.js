@@ -187,7 +187,7 @@ const Chat = () => {
                                 () => {
                                     handleDecryptClick(msg.data, decryptedName, decryptedMIME)
                                 }
-                        }>Click to decrypt {decryptedName}.</span>
+                        }> Click to decrypt {decryptedName}.</span>
                     </p>
                 </div>
             ]);
