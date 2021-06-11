@@ -24,12 +24,6 @@ let socket;
 
 // Loader
 
-export const initiateSocket = (room) => {
-    socket = io(process.env.REACT_APP_API);
-    var roomName = CryptoJS.SHA512(room).toString();
-    socket.emit('join', roomName)
-}
-
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const byteCharacters = atob(btoa(b64Data));
     const byteArrays = [];
@@ -125,7 +119,11 @@ const Chat = () => {
 
         dispatch({type: 'SET_ROOM', payload: roomName});
 
-        initiateSocket(state.key);
+        socket = io(process.env.REACT_APP_API);
+        socket.emit('join', JSON.parse(JSON.stringify({
+            "roomName": roomName,
+            "user_name": state.username
+        })));
 
         if (joinedSent === false) {
             var greetingMessage = JSON.parse(JSON.stringify({ // on join, broadcast to room
@@ -144,6 +142,7 @@ const Chat = () => {
         try {
             socket.on('chat response', messageHandler);
             socket.on('file response', fileHandler);
+            socket.on('join response', joinhandler);
             socket.on('leave response', leaveHandler);
         } catch (err) {
             history.push('/');
@@ -155,6 +154,28 @@ const Chat = () => {
             socket.off('leave response');
         }
     }, []);
+
+    function joinHandler(msg) {
+        var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
+        if (decryptedUsername !== '') { // if the username and message are empty values, stop
+            console.log(msg); // for debugging: print the encrypted contents of the response
+            setReceived((messages) => [
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b> {decryptedUsername} has joined the room.</b></p>
+                </div>
+            ]);
+            playNotification();
+            try {
+                divRef.current.scrollIntoView({behavior: 'smooth'});
+            } catch(err) {
+                return;
+            }
+        } else {
+            console.log(`Not my message: ${msg}`)
+        }
+    }
 
     function leaveHandler(msg) {
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key);
