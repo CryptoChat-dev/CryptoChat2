@@ -4,6 +4,7 @@ import {Context} from '../Components/Store';
 import {useHistory} from 'react-router-dom';
 import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
+import { useBeforeunload } from 'react-beforeunload';
 
 // ReachUI
 
@@ -88,6 +89,11 @@ const Chat = () => {
     const openTL = () => setShowDialogTL(true);
     const closeTL = () => setShowDialogTL(false);
 
+    useBeforeunload((event) => {
+        event.preventDefault();
+        broadcastLeave();
+      });    
+
     // Helper Functions
 
     const crypt = (function () { // encryption function
@@ -130,7 +136,6 @@ const Chat = () => {
     }, [state.roomName])
 
     useEffect(() => {
-        window.onbeforeunload = broadcastLeave;
         try {
             socket.on('chat response', messageHandler);
             socket.on('file response', fileHandler);
@@ -485,7 +490,6 @@ const Chat = () => {
                                 onClick={closeTL}>Ok</button>
                 </div>
         </Dialog>
-
 
     </React.Fragment>)
 }
