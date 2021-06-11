@@ -511,7 +511,7 @@ const Chat = () => {
                             </div>
                             {showEmojiPicker === true &&
                                 <div class="emojiPicker">
-                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))})}/>
+                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
                                 </div>
                             }
                         </div>
