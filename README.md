@@ -46,7 +46,7 @@ During this overview, Bob and Alice will be communicating with each other.
 
 1. The user enters their username and room key (which is used for the encryption key).
 
-The client sends a SHA-512 hash of the encryption key to the backend webserver using Socket.IO. This hashed encryption key is used to create a socket room. The plaintext encryption key never leaves the client--ever.
+Bob and Alice enter their different usernames and the same room key on the splash screen. Both of their clients send a SHA-512 hashed version of their encryption key to the backend webserver using Socket.IO to join the same socket room. The plaintext encryption keys never leave their clients--ever.
 
 ### Text
 
