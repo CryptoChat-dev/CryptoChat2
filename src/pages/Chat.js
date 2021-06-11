@@ -407,7 +407,7 @@ const Chat = () => {
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
                     </h2>
-                    {/* <img src={fileObject}></img> */} </div>
+                </div>
                 <div class="chatbox-messages">
                     <div class="messageviewer-parent">
                         <div id="messageviewer" name="messageviewer" class="messageviewer">
@@ -462,6 +462,7 @@ const Chat = () => {
             }
             isOpen={showDialog}
             onDismiss={close}>
+        <div class="loader"></div>
             <h1>Uploading File...</h1>
             <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
         </Dialog>
@@ -477,12 +478,12 @@ const Chat = () => {
             }
             isOpen={showDialogTL}
             onDismiss={closeTL}>
-            <h1>File Too Large</h1>
-            <p>The file you selected is larger than the size limit ({process.env.REACT_APP_SIZE_LIMIT} MB) and cannot be uploaded.</p>
-            <div class="modalButtons">
-            <button class="button"
-                            onClick={closeTL}>Ok</button>
-            </div>
+                <h1>File Too Large</h1>
+                <p>The file you selected is larger than the size limit ({process.env.REACT_APP_SIZE_LIMIT} MB) and cannot be uploaded.</p>
+                <div class="modalButtons">
+                <button class="button"
+                                onClick={closeTL}>Ok</button>
+                </div>
         </Dialog>
 
 
