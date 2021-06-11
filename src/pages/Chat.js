@@ -142,7 +142,7 @@ const Chat = () => {
         try {
             socket.on('chat response', messageHandler);
             socket.on('file response', fileHandler);
-            socket.on('join response', joinhandler);
+            socket.on('join response', joinHandler);
             socket.on('leave response', leaveHandler);
         } catch (err) {
             history.push('/');
