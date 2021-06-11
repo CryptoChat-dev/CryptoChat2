@@ -4,6 +4,7 @@ import {Context} from '../Components/Store';
 import {useHistory} from 'react-router-dom';
 import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
+import Picker from 'emoji-picker-react';
 
 // ReachUI
 
@@ -16,7 +17,7 @@ import CryptoJS from 'crypto-js';
 // Icons
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPaperclip, faTimes} from '@fortawesome/free-solid-svg-icons'
+import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
 
 // Socket.IO
 import io from "socket.io-client";
@@ -68,8 +69,10 @@ const Chat = () => {
 
     const [state, dispatch] = useContext(Context);
 
-    const [message, setMessage] = React.useState();
-    const [messageIcon, setMessageIcon] = React.useState('faPaperclip')
+    const [message, setMessage] = React.useState('');
+    const [messageIcon, setMessageIcon] = React.useState('faPaperclip');
+
+    const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
 
     const [fileSelected, setFileSelected] = React.useState(false);
     const [file, setFile] = React.useState('');
@@ -399,6 +402,18 @@ const Chat = () => {
         }
     }
 
+    function handleEmojiButtonClick() {
+        if (showEmojiPicker === true) {
+            setShowEmojiPicker(false);
+            return;
+        }
+        setShowEmojiPicker(true);
+    }
+
+    function onEmojiClick(event, emojiObject) {
+        setMessage(message.concat(emojiObject.emoji))
+    }
+
     // Return
 
     return (<React.Fragment>
@@ -442,7 +457,13 @@ const Chat = () => {
                                     {
                                     messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
                                 }</button>
+                                <button class="iconbutton emoji" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
                             </div>
+                            {showEmojiPicker === true &&
+                                <div class="emojiPicker">
+                                    <Picker onEmojiClick={onEmojiClick}/>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -457,6 +478,7 @@ const Chat = () => {
                         onClick={handleLeave}>Leave</button>
                 </div>
             </div>
+
         </div>
         <Dialog style={
                 {

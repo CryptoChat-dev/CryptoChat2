@@ -194,6 +194,12 @@ body {
         width: 60%;
     }
 }
+.emojiPicker {
+    position: relative;
+    z-index: 99 !important;
+    float: right;
+}
+
 
 @media only screen and (max-height: 730px) {
     .chatbox-messages {

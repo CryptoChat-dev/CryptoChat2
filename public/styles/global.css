@@ -159,15 +159,19 @@ h1 {
     background: transparent;
     color: var(--txt-color);
     border: none;
+    font-size: 36px;
 }
 
 .iconbutton.attach {
     margin-left: 3%;
-    font-size: 36px;
     margin-right: 1%;
 }
 
-.iconbutton.attach:hover {
+.iconbutton.emoji {
+    margin-right: 1%;
+}
+
+.iconbutton:hover {
     cursor: pointer;
 }
 
