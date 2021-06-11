@@ -205,7 +205,7 @@ const Chat = () => {
         console.log(msg); // Print file response for debugging
         console.log(sentFiles)
         console.log(sentFiles.indexOf(Number(msg.uid)))
-        if (sentFiles.indexOf(Number(msg.uid)) === -1) {
+        if (sentFiles.indexOf(Number(msg.uid)) > -1) {
             console.log("[File Handler] This is my file. Returning.");
             return;
         }
@@ -339,9 +339,8 @@ const Chat = () => {
                     "uid": randomuid
                 })));
 
-                setSentFiles([
-                    ...sentFiles,
-                    randomuid ]);
+                var newSentFiles = sentFiles.concat(randomuid);
+                setSentFiles(newSentFiles);
 
                 setReceived((messages) => [// Display a decryption error message
                     ...messages,
