@@ -314,6 +314,9 @@ const Chat = () => {
         const sizeMB = thisFile.size / 1024000;
         if (sizeMB > process.env.REACT_APP_SIZE_LIMIT) {
             openTL();
+            setFileSelected(false);
+            setFileObject(null);
+            setFile(null);
             return;
         }
         setMessage(`Attached: ${
