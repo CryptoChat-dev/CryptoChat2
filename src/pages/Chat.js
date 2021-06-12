@@ -120,6 +120,15 @@ const Chat = () => {
         }
     }, []);
 
+    const fileOriginCheck = (uid) => {
+        if (state.sentFiles.indexOf(Number(uid)) > -1) {
+            console.log("[File Origin Check] This is my file.");
+            return true;
+        }
+
+        return false;
+    }
+
     function joinHandler(msg) {
         // Handles join responses
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
@@ -200,13 +209,13 @@ const Chat = () => {
         playNotification();
     }
 
-    function fileHandler(msg) {
+    function fileHandler(msg, sentFiles) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        console.log(state.sentFiles)
-        console.log(state.sentFiles.indexOf(Number(msg.uid)))
-        if (state.sentFiles.indexOf(Number(msg.uid)) > -1) {
-            console.log("[File Handler] This is my file. Returning.");
+        console.log(sentFiles)
+        console.log(sentFiles.indexOf(Number(msg.uid)))
+        if (fileOriginCheck(msg.uid) === true) {
+            console.log("[File Handler] This is the origin. Returning.");
             return;
         }
 
@@ -343,7 +352,6 @@ const Chat = () => {
                     "uid": randomuid
                 })));
                 
-
                 setReceived((messages) => [// Display a decryption error message
                     ...messages,
                     <div ref={divRef}>
