@@ -72,12 +72,17 @@ body {
 }
 
 .roomkey {
-  margin-top: 10%;
+  margin-top: 5%;
   display: flex;
 }
 
-.username {
+.fieldparent {
   width: 50%;
+}
+
+.username {
+  display: flex;
+  justify-content: center;
 }
 
 .buttons.bottom {
@@ -145,7 +150,7 @@ body {
 }
 
 @media only screen and (max-width: 600px) {
-  .username {
+  .fieldparent {
     width: 90%;
   }
 

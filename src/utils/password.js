@@ -50,9 +50,9 @@ function secureRandom(count) {
     return result % count
 }
 
-export function getWordNum() { // get the random words from the dice ware dict
+export function getWordNum(length) { // get the random words from the dice ware dict
     var wordslist = []
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < length; i++) {
         var newnum = []
         for (var j = 0; j < 5; j += 1) { // roll a 6 sided die
             newnum.push(secureRandom(6) + 1)

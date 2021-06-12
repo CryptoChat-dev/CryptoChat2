@@ -9,6 +9,10 @@ import {useHistory} from 'react-router-dom';
 import {Dialog} from "@reach/dialog";
 import "@reach/dialog/styles.css"
 
+// FontAwesome
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faRandom} from '@fortawesome/free-solid-svg-icons'
+
 // Files
 import {scorePassword, getWordNum} from '../utils/password';
 
@@ -91,44 +95,50 @@ const Splash = () => {
                 </div>
                 <div class="messagebox-parent">
                     <div class="messagebox">
-                        <div class="username">
-                            <input id="msg" type="username" class="message" placeholder="Username"
-                                onChange={
-                                    (e) => setUsername(e.target.value)
-                                }/>
+                        <div class="fieldparent">
+                            <div class="username">
+                                <input id="msg" type="text" class="message" placeholder="Username" value={username}
+                                    onChange={
+                                        (e) => setUsername(e.target.value)
+                                    }/>
+                                    <div class="randomize-parent">
+                                        <button class="iconbutton random" title="Generate Random Username" onClick={() => {setUsername(getWordNum(2))}}>
+                                            <FontAwesomeIcon icon={faRandom} />
+                                        </button>
+                                    </div>
+                            </div>
                             <div class="roomkey">
-                                <input id="key" type="username" class="message"
+                                <input id="key" type="text" class="message"
                                     value={key}
                                     placeholder="Room Key"
                                     onChange={
                                         (e) => setKey(e.target.value)
                                     }/>
                                     <div class="randomize-parent">
-                                <div class="randomize">
-                                    <button class="button randomize" id="randomizer"
-                                        onClick={() => {setKey(getWordNum())}}>Random</button>
-                                </div>
+                                    <button class="iconbutton random" title="Generate Random Secure Key" onClick={() => {setKey(getWordNum(6))}}>
+                                        <FontAwesomeIcon icon={faRandom} />
+                                    </button>
                                     </div>
                             </div>
                             <div class="buttons">
                                 <div class="buttons top">
-                                    <button class="button theme" id="toggler"
+                                    <button class="button theme" id="toggler" title="Change App Theme"
                                         onClick={changeTheme}>
                                         {
                                         state.oppositeTheme
                                     }</button>
-                                    <button class="button join" id="join"
+                                    <button class="button join" id="join" title="Join Chat"
                                         onClick={screening}>Join</button>
                                 </div>
                                 <div class="buttons bottom">
-                                    <button class="button legal"
+                                    <button class="button legal" title="View Legal Policies"
                                         onClick={
                                             () => {
                                                 history.push('/legal')
                                             }
                                     }>Legal</button>
                                     <a href="https://github.com/CryptoChat-dev" rel="noreferrer" target="_blank">
-                                        <button class="button github">Github</button>
+                                        <button class="button github" title="View Github Repo">Github</button>
                                     </a>
                                 </div>
                             </div>
