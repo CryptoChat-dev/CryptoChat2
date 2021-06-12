@@ -498,11 +498,9 @@ const Chat = () => {
         <div class="chatbox-parent" id="chatbox-parent">
             <div class="chatbox-child">
                 <div class="chatbox-header">
-                    <div class="blur">
-                        <p class="keyname" id="keyname">Room Key: {
-                            state.key
-                        }</p>
-                    </div>
+                    <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
+                        state.key
+                    }</p></p>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.

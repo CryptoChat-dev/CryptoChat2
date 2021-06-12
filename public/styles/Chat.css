@@ -41,17 +41,6 @@ a {
         -20px -20px 60px var(--second-box-shadow);
 }
 
-.blur {
-    filter: blur(8px);
-    transition-duration: .1s;
-    width: 70%;
-    margin-left: 2%;
-}
-
-.blur:hover {
-    filter: none;
-}
-
 .chatbox-messages {
     height: 75%;
 }
@@ -160,8 +149,21 @@ a {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1em;
     color: var(--txt-color);
-    margin-left: 5%;
     font-weight: lighter;
+    display: inline-block;
+    margin: 0;
+    filter: blur(5px);
+    transition-duration: .1s;
+    margin-top: 2%;
+}
+
+.keyname:hover {
+    filter: none;
+}
+
+.keyname.title {
+    margin-left: 5%;
+    filter: none;
 }
 
 .chatbox-header {
@@ -222,7 +224,7 @@ a {
         width: 60%;
     }
 
-    .blur {
+    .keyname {
         filter: none;
     }
 }
