@@ -333,10 +333,11 @@ const Chat = () => {
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
             var randomuid = randomUID(6);
-            dispatch({type: 'SET_SENT', payload: [
+            const newSentFiles = [
                 ...state.sentFiles,
                 randomuid
-            ]});
+            ]
+            dispatch({type: 'SET_SENT', payload: newSentFiles});
 
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 reader.result.replace(/^data:.+;base64,/, '');
@@ -344,12 +345,15 @@ const Chat = () => {
                 console.log(`[Send Button] Base64 encoded data. Sending ${
                     fileObject.type
                 }.`)
+                var encryptedUsername = crypt.encryptMessage(state.username, state.key);
                 var encryptedName = crypt.encryptMessage(file.name, state.key);
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
+                console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
+                console.log("[Send Button] File data encrypted. Sending...")
                 socket.emit('file event', JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
-                    "user_name": crypt.encryptMessage(state.username, state.key),
+                    "user_name": encryptedUsername,
                     "name": encryptedName,
                     "type": encryptedMIME,
                     "data": encryptedData,
