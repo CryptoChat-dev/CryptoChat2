@@ -361,6 +361,20 @@ const Chat = () => {
                     "data": encryptedData,
                     "uid": randomuid
                 })));
+
+                socket.on('file progress', function (msg) {
+                    if (msg.finished === true) {
+                        console.log("[Send Button] Data sent.");
+                        setMessage('');
+                        setFileSelected(false);
+                        setFile(null);
+                        setFileObject(null);
+                        setMessageIcon('faPaperclip')
+                        setDisabled(false);
+                        close();
+                        socket.off('file progress');
+                    }
+                })
                 
                 // setReceived((messages) => [// Display a decryption error message
                 //     ...messages,
@@ -377,14 +391,6 @@ const Chat = () => {
                 //         }> Click to decrypt {file.name}.</span></p>
                 //     </div>
                 // ]);    
-                console.log("[Send Button] Data sent.");
-                setMessage('');
-                setFileSelected(false);
-                setFile(null);
-                setFileObject(null);
-                setMessageIcon('faPaperclip')
-                setDisabled(false);
-                close();
             };
             return;
         }
