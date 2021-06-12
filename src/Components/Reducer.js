@@ -30,11 +30,6 @@ const Reducer = (state, action) => {
                 ...state,
                 username: action.payload
             }
-        case 'SET_SENT':
-            return {
-                ...state,
-                sentFiles: action.payload
-            }
         default:
             return state;
     }

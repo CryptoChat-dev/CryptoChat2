@@ -23,7 +23,6 @@ import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
 
 import {b64toBlob, saveBlob, retrieveB64FromBlob} from '../utils/blob';
 import {crypt} from '../utils/encryption.js';
-import { randomUID } from '../utils/password';
 
 // Socket.IO
 import io from "socket.io-client";
@@ -333,34 +332,36 @@ const Chat = () => {
             var reader = new FileReader();
 
             reader.readAsDataURL(fileObject) // Reader Object, contains base64 data
-            var randomuid = randomUID(6);
-            const newSentFiles = [
-                ...state.sentFiles,
-                randomuid
-            ]
-            dispatch({type: 'SET_SENT', payload: newSentFiles});
 
             reader.onload = function () { // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
                 reader.result.replace(/^data:.+;base64,/, '');
                 var encodedData = retrieveB64FromBlob(reader.result);
+
                 console.log(`[Send Button] Base64 encoded data. Sending ${
                     fileObject.type
                 }.`)
+
                 var encryptedUsername = crypt.encryptMessage(state.username, state.key);
                 var encryptedName = crypt.encryptMessage(file.name, state.key);
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
                 console.log("[Send Button] File data encrypted. Sending...")
+
                 var stream = ss.createStream();
-                ss(socket).emit('file event', stream, JSON.parse(JSON.stringify({
-                    "roomName": state.roomName,
-                    "user_name": encryptedUsername,
-                    "name": encryptedName,
-                    "type": encryptedMIME,
-                    "data": encryptedData,
-                    "uid": randomuid
-                })));
+                try {
+                    ss(socket).emit('file event', stream, {
+                        "roomName": state.roomName,
+                        "user_name": encryptedUsername,
+                        "name": encryptedName,
+                        "type": encryptedMIME,
+                        "data": encryptedData
+                    });
+                } catch(err) {
+                    console.log("[Send Button] Couldn't send file.");
+                    close();
+                    return;
+                }
 
                 socket.on('file progress', function (msg) {
                     if (msg.finished === true) {
@@ -375,22 +376,6 @@ const Chat = () => {
                         socket.off('file progress');
                     }
                 })
-                
-                // setReceived((messages) => [// Display a decryption error message
-                //     ...messages,
-                //     <div ref={divRef}>
-                //         <p>
-                //             <b>{state.username} sent an attachment.</b>: 
-                //             <span class="decrypt"
-                //             onClick={
-                //                 () => {
-                //                     // Pass the encrypted file data, decrypted name and decrypted MIME
-                //                     // to the file decryption/save function
-                //                     handleDecryptClick(encryptedData, file.name, fileObject.type)
-                //                 }
-                //         }> Click to decrypt {file.name}.</span></p>
-                //     </div>
-                // ]);    
             };
             return;
         }

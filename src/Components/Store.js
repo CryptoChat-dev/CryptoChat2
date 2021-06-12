@@ -8,7 +8,6 @@ const initialState = {
     key: null,
     roomName: null,
     username: null,
-    sentFiles: [],
     error: null
 };
 
