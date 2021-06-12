@@ -236,7 +236,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
-                                <b> {decryptedUsername} sent an image</b>.
+                                <b> {decryptedUsername} sent an audio file</b>.
                                 <span class="decrypt"
                                     onClick={
                                         () => {
