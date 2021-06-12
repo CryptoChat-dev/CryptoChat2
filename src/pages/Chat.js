@@ -245,6 +245,7 @@ const Chat = () => {
                                             handleAudioPreviewClick(msg.data, decryptedName, decryptedMIME)
                                         }
                                 }> Click to preview {decryptedName}.</span>
+                                <br></br>
                                 <audio class="previewedImage" id={decryptedName} controls style={{display: 'none'}}/>
                             </p>
                         </div>
