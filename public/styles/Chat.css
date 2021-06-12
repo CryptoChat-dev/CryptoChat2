@@ -119,6 +119,10 @@ a {
         -20px -20px 60px var(--second-box-shadow);
 }
 
+.previewedImage {
+    maxwidth: 100%;
+}
+
 /* React Elements */
 
 .emojiPicker {

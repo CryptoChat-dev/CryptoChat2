@@ -223,7 +223,7 @@ const Chat = () => {
                                         handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                     }
                             }> Click to preview {decryptedName}.</span>
-                            <img id={decryptedName} alt={decryptedName} style={{display: 'none'}}></img>
+                            <img id={decryptedName} class="previewedImage" alt={decryptedName} style={{display: 'none'}}></img>
                         </p>
                     </div>
                 ]);    
@@ -281,7 +281,7 @@ const Chat = () => {
 
     const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
         const imageElement = document.getElementById(decryptedName);
-        if (imageElement.style === "display: inline-block;") {
+        if (imageElement.style.cssText === "display: inline-block;") {
             imageElement.style = "display: none;"
             return;
         }
