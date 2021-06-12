@@ -232,6 +232,7 @@ const Chat = () => {
                     ]);    
                     return;
                 case 'audio/mpeg':
+                case 'audio/wav':
                 case 'audio/flac':
                     setReceived((messages) => [// Display
                         ...messages,
