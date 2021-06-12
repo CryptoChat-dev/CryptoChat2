@@ -280,6 +280,12 @@ const Chat = () => {
     }
 
     const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const imageElement = document.getElementById(decryptedName);
+        if (imageElement.style === "display: inline-block;") {
+            imageElement.style = "display: none;"
+            return;
+        }
+
         const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
         console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
         const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
