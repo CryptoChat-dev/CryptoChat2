@@ -211,6 +211,7 @@ const Chat = () => {
         if (decryptedUsername !== '') { // if the username is an empty value, stop
             switch(decryptedMIME) {
                 case 'image/jpeg':
+                case 'image/gif':
                 case 'image/png':
                     setReceived((messages) => [// Display
                         ...messages,
