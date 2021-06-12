@@ -223,6 +223,7 @@ const Chat = () => {
                                         handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                     }
                             }> Click to preview {decryptedName}.</span>
+                            <img id={decryptedName} alt={decryptedName}></img>
                         </p>
                     </div>
                 ]);    
@@ -242,7 +243,6 @@ const Chat = () => {
                                     handleDecryptClick(msg.data, decryptedName, decryptedMIME)
                                 }
                         }> Click to decrypt {decryptedName}.</span>
-                        <img id={decryptedName} alt={decryptedName}></img>
                     </p>
                 </div>
             ]);
