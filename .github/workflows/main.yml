@@ -25,4 +25,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: curl 65.21.0.101:35664
+        run: curl 65.21.0.101:35665
