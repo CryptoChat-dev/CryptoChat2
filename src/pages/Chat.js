@@ -629,22 +629,24 @@ const Chat = () => {
             </div>
 
         </div>
-        <Dialog style={
-                {
-                    backgroundColor: state.modalColor,
-                    minWidth: "calc(min(350px,90%))",
-                    width: "25%",
-                    padding: "2%",
-                    textAlign: "center",
-                    borderRadius: "10px"
+        {fileSelected === true &&
+            <Dialog style={
+                    {
+                        backgroundColor: state.modalColor,
+                        minWidth: "calc(min(350px,90%))",
+                        width: "25%",
+                        padding: "2%",
+                        textAlign: "center",
+                        borderRadius: "10px"
+                    }
                 }
-            }
-            isOpen={showDialog}>
-            <div class="loader"></div>
-            <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
-            <h1>Uploading File...</h1>
-            <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
-        </Dialog>
+                isOpen={showDialog}>
+                <div class="loader"></div>
+                <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
+                <h1>Uploading File...</h1>
+                <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
+            </Dialog>
+        }
         <Dialog style={
                 {
                     backgroundColor: state.modalColor,
