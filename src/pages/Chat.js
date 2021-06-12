@@ -89,10 +89,10 @@ const Chat = () => {
         if (joinedSent === false) {
             // If the join message hasn't been sent, do it.
             socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
-            socket.emit('join', JSON.parse(JSON.stringify({
+            socket.emit('join', {
                 "roomName": roomName,
                 "user_name": crypt.encryptMessage(state.username, state.key)
-            }))); // Emit the join event
+            }); // Emit the join event
             setJoinedSent(true); // Don't send the event again
         }
     }, [state.roomName])
@@ -260,10 +260,10 @@ const Chat = () => {
 
     function broadcastLeave() {
         // Broadcasts a leave event to the room
-        socket.emit('leave', JSON.parse(JSON.stringify({
+        socket.emit('leave', {
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key)
-        })));
+        });
     }
 
     function changeTheme() { // Change app-wide theme
@@ -289,11 +289,11 @@ const Chat = () => {
 
     function socketEmit(msg) {
         // Emits message events
-        socket.emit('chat event', JSON.parse(JSON.stringify({
+        socket.emit('chat event', {
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
             "message": crypt.encryptMessage(msg, state.key)
-        })));
+        });
     }
 
     function handleSend() {
@@ -376,7 +376,15 @@ const Chat = () => {
                         <p>
                         <b class="systemmsg">SYSTEM: Only you can see this help message.</b>
                         <br></br>
-                        <b>CryptoChat Command Help</b><br></br>/shrug - Send a shrug emoticon.<br></br>/tableflip - Send a table flipping emoticon.<br></br>/unflip - Send a table unflipping emoticon.<br></br>/leave - Leave the room.</p>
+                        <b>CryptoChat Command Help</b>
+                        <br></br>
+                        /shrug - Send a shrug emoticon.
+                        <br></br>
+                        /tableflip - Send a table flipping emoticon.
+                        <br></br>
+                        /unflip - Send a table unflipping emoticon.
+                        <br></br>
+                        /leave - Leave the room.</p>
                     </div>
                 ]);    
                 break;    
