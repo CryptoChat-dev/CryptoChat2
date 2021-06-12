@@ -49,6 +49,7 @@ const Chat = () => {
     const [fileSelected, setFileSelected] = React.useState(false);
     const [file, setFile] = React.useState('');
     const [fileObject, setFileObject] = React.useState(null);
+    const [displayImage, setDisplayImage] = React.useState('none');
 
     const [received, setReceived] = React.useState([]);
     const [joinedSent, setJoinedSent] = React.useState(false);
@@ -219,11 +220,11 @@ const Chat = () => {
                                 onClick={
                                     () => {
                                         // Pass the encrypted file data, decrypted name and decrypted MIME
-                                        // to the file decryption/save function
+                                        // to the file decryption
                                         handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                     }
                             }> Click to preview {decryptedName}.</span>
-                            <img id={decryptedName} alt={decryptedName}></img>
+                            <img id={decryptedName} alt={decryptedName} style={{display: displayImage}}></img>
                         </p>
                     </div>
                 ]);    
@@ -285,6 +286,7 @@ const Chat = () => {
         const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
         var objectURL = URL.createObjectURL(blob);
         document.getElementById(decryptedName).src = objectURL;
+        setDisplayImage('inline-block');
     }
 
     function broadcastLeave() {
