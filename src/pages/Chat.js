@@ -230,7 +230,7 @@ const Chat = () => {
                         </div>
                     ]);    
                     return;
-                case 'audio/mp3':
+                case 'audio/mpeg':
                 case 'audio/flac':
                     setReceived((messages) => [// Display
                         ...messages,
