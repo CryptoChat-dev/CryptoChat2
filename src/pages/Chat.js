@@ -209,43 +209,67 @@ const Chat = () => {
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
 
         if (decryptedUsername !== '') { // if the username is an empty value, stop
-            if (decryptedMIME === "image/jpeg" || decryptedMIME === "image/png") {
-                setReceived((messages) => [// Display
-                    ...messages,
-                    <div ref={divRef}>
-                        <p>
-                            <b> {decryptedUsername} sent an image</b>.
-                            <span class="decrypt"
-                                onClick={
-                                    () => {
-                                        // Pass the encrypted file data, decrypted name and decrypted MIME
-                                        // to the file decryption
-                                        handlePreviewClick(msg.data, decryptedName, decryptedMIME)
-                                    }
-                            }> Click to preview {decryptedName}.</span>
-                            <img id={decryptedName} class="previewedImage" alt={decryptedName} style={{display: 'none'}}></img>
-                        </p>
-                    </div>
-                ]);    
-                return;
+            switch(decryptedMIME) {
+                case 'image/jpeg':
+                case 'image/png':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an image</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handleImagePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <img id={decryptedName} class="previewedImage" alt={decryptedName} style={{display: 'none'}}></img>
+                            </p>
+                        </div>
+                    ]);    
+                    return;
+                case 'audio/mp3':
+                case 'audio/flac':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an image</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handleAudioPreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <audio class="previewedImage" id={decryptedName} ref="audio_tag" controls/>
+                            </p>
+                        </div>
+                    ]);    
+                    return;
+                default:
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an attachment</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption/save function
+                                            handleDecryptClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to decrypt {decryptedName}.</span>
+                            </p>
+                        </div>
+                    ]);
+                }
             }
 
-            setReceived((messages) => [// Display
-                ...messages,
-                <div ref={divRef}>
-                    <p>
-                        <b> {decryptedUsername} sent an attachment</b>.
-                        <span class="decrypt"
-                            onClick={
-                                () => {
-                                    // Pass the encrypted file data, decrypted name and decrypted MIME
-                                    // to the file decryption/save function
-                                    handleDecryptClick(msg.data, decryptedName, decryptedMIME)
-                                }
-                        }> Click to decrypt {decryptedName}.</span>
-                    </p>
-                </div>
-            ]);
 
             playNotification();
 
@@ -255,18 +279,18 @@ const Chat = () => {
             } catch(err) {
                 return;
             }
-        } else {
-            setReceived((messages) => [// Display a decryption error message
-                ...messages,
-                <div ref={divRef}>
-                    <p>
-                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
-                </div>
-            ]);
-            console.log(`Not my message: ${
-                msg.name
-            }`)
-        }
+        // } else {
+        //     setReceived((messages) => [// Display a decryption error message
+        //         ...messages,
+        //         <div ref={divRef}>
+        //             <p>
+        //                 <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+        //         </div>
+        //     ]);
+        //     console.log(`Not my message: ${
+        //         msg.name
+        //     }`)
+        // }
     }
 
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
@@ -279,7 +303,22 @@ const Chat = () => {
         saveBlob(blob, decryptedName); // Save blob
     }
 
-    const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+    const handleImagePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const imageElement = document.getElementById(decryptedName);
+        if (imageElement.style.cssText === "display: inline-block;") {
+            imageElement.style = "display: none;"
+            return;
+        }
+
+        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
+        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+        var objectURL = URL.createObjectURL(blob);
+        document.getElementById(decryptedName).src = objectURL;
+        document.getElementById(decryptedName).style = 'display: inline-block;';
+    }
+
+    const handleAudioPreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
         const imageElement = document.getElementById(decryptedName);
         if (imageElement.style.cssText === "display: inline-block;") {
             imageElement.style = "display: none;"
