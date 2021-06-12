@@ -27,6 +27,7 @@ import { randomUID } from '../utils/password';
 
 // Socket.IO
 import io from "socket.io-client";
+const ss = require('socket.io-stream')
 let socket;
 
 
@@ -351,7 +352,8 @@ const Chat = () => {
                 console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
                 console.log("[Send Button] File data encrypted. Sending...")
-                socket.emit('file event', JSON.parse(JSON.stringify({
+                var stream = ss.createStream();
+                ss(socket).emit('profile-image', stream, JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": encryptedUsername,
                     "name": encryptedName,
@@ -360,21 +362,21 @@ const Chat = () => {
                     "uid": randomuid
                 })));
                 
-                setReceived((messages) => [// Display a decryption error message
-                    ...messages,
-                    <div ref={divRef}>
-                        <p>
-                            <b>{state.username} sent an attachment.</b>: 
-                            <span class="decrypt"
-                            onClick={
-                                () => {
-                                    // Pass the encrypted file data, decrypted name and decrypted MIME
-                                    // to the file decryption/save function
-                                    handleDecryptClick(encryptedData, file.name, fileObject.type)
-                                }
-                        }> Click to decrypt {file.name}.</span></p>
-                    </div>
-                ]);    
+                // setReceived((messages) => [// Display a decryption error message
+                //     ...messages,
+                //     <div ref={divRef}>
+                //         <p>
+                //             <b>{state.username} sent an attachment.</b>: 
+                //             <span class="decrypt"
+                //             onClick={
+                //                 () => {
+                //                     // Pass the encrypted file data, decrypted name and decrypted MIME
+                //                     // to the file decryption/save function
+                //                     handleDecryptClick(encryptedData, file.name, fileObject.type)
+                //                 }
+                //         }> Click to decrypt {file.name}.</span></p>
+                //     </div>
+                // ]);    
                 console.log("[Send Button] Data sent.");
                 setMessage('');
                 setFileSelected(false);
