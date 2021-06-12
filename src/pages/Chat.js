@@ -242,7 +242,7 @@ const Chat = () => {
                                     handleDecryptClick(msg.data, decryptedName, decryptedMIME)
                                 }
                         }> Click to decrypt {decryptedName}.</span>
-                        <img id={decryptedName} alt={decryptedName} />
+                        <img id={decryptedName} alt={decryptedName}></img>
                     </p>
                 </div>
             ]);
