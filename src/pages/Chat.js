@@ -17,7 +17,7 @@ import CryptoJS from 'crypto-js';
 // Icons
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPaperclip, faTimes, faLaugh, faPaperPlane} from '@fortawesome/free-solid-svg-icons'
+import {faPaperclip, faTimes, faLaugh, faPaperPlane, faUsers} from '@fortawesome/free-solid-svg-icons'
 
 // Util Imports
 
@@ -37,6 +37,8 @@ const Chat = () => {
     const hiddenFileInput = React.useRef(null);
 
     // State Varibles
+    const [userCount, setUserCount] = React.useState(null)
+
     const [playNotification] = useSound(notificationSound);
 
     const [state, dispatch] = useContext(Context);
@@ -104,6 +106,7 @@ const Chat = () => {
             socket.on('file response', fileHandler);
             socket.on('join response', joinHandler);
             socket.on('leave response', leaveHandler);
+            socket.on('user count', userCountHandler);
         } catch (err) {
             // If there's an error, cancel.
             history.push('/');
@@ -115,6 +118,7 @@ const Chat = () => {
             socket.off('file response');
             socket.off('join response')
             socket.off('leave response');
+            socket.off('user count');
         }
     }, []);
 
@@ -140,6 +144,11 @@ const Chat = () => {
         } else {
             console.log(`Not my message: ${msg}`)
         }
+    }
+
+    function userCountHandler(msg) {
+        // Handles user count responses
+        setUserCount(msg.count);
     }
 
     function leaveHandler(msg) {
@@ -258,7 +267,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
-                                <b> {decryptedUsername} sent a video file</b>.
+                                <b> {decryptedUsername} sent a video</b>.
                                 <span class="decrypt"
                                     onClick={
                                         () => {
@@ -452,6 +461,8 @@ const Chat = () => {
                         <br></br>
                         <b>CryptoChat Command Help</b>
                         <br></br>
+                        /theme - Change app theme.
+                        <br></br>
                         /shrug - Send a shrug emoticon.
                         <br></br>
                         /tableflip - Send a table flipping emoticon.
@@ -477,6 +488,9 @@ const Chat = () => {
                 break;
             case '/unflip':
                 socketEmit('┬─┬ ノ( ゜-゜ノ)');
+                break;
+            case '/theme':
+                changeTheme();
                 break;
             default:
                 socketEmit(message);
@@ -575,6 +589,7 @@ const Chat = () => {
                     <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
                         state.key
                     }</p></p>
+                    <p class="icon users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.

@@ -243,6 +243,12 @@ h1 {
     font-size: 3rem;
 }
 
+.icon.users {
+    float: right;
+    margin-right: 2rem;
+    font-size: 1.5rem;
+}
+
 /* Input */
 
 .fileinput {
