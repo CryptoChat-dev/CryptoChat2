@@ -508,7 +508,7 @@ const Chat = () => {
                 <div class="chatbox-messages">
                     <div class="messageviewer-parent">
                         <div id="messageviewer" name="messageviewer" class="messageviewer">
-                            <div class="messagetxt"> {received}</div>
+                            <div class="messagetxt" id="messagetxt"> {received}</div>
                         </div>
                     </div>
                     <div class="messagebox">
