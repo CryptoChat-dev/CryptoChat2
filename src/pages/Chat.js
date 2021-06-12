@@ -251,6 +251,26 @@ const Chat = () => {
                         </div>
                     ]);    
                     return;
+                case 'video/mp4':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent a video file</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handleVideoPreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <br></br>
+                                <video class="previewedImage" id={decryptedName} controls style={{display: 'none'}}/>
+                            </p>
+                        </div>
+                    ]);    
+                    return;  
                 default:
                     setReceived((messages) => [// Display
                         ...messages,
@@ -333,6 +353,22 @@ const Chat = () => {
         document.getElementById(decryptedName).src = objectURL;
         document.getElementById(decryptedName).style = 'display: inline-block;';
     }
+
+    const handleVideoPreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const imageElement = document.getElementById(decryptedName);
+        if (imageElement.style.cssText === "display: inline-block;") {
+            imageElement.style = "display: none;"
+            return;
+        }
+
+        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
+        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+        var objectURL = URL.createObjectURL(blob);
+        document.getElementById(decryptedName).src = objectURL;
+        document.getElementById(decryptedName).style = 'display: inline-block;';
+    }
+
 
     function broadcastLeave() {
         // Broadcasts a leave event to the room
