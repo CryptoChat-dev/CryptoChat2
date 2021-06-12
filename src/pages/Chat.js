@@ -380,6 +380,9 @@ const Chat = () => {
                     </div>
                 ]);    
                 break;    
+            case '/quit':
+            case '/bye':
+            case '/exit':
             case '/leave':
                 broadcastLeave();
                 history.push('/');
@@ -392,6 +395,12 @@ const Chat = () => {
                 break;
             case '/unflip':
                 socketEmit('┬─┬ ノ( ゜-゜ノ)');
+                break;
+            case '/clear':
+                const div = document.getElementById('messagetxt');
+                while(div.firstChild){
+                    div.removeNode(div.firstChild);
+                }
                 break;
             default:
                 socketEmit(message);
@@ -469,7 +478,7 @@ const Chat = () => {
         if (fileSelected === true) {
             return;
         }
-        
+
         if (showEmojiPicker === true) {
             setShowEmojiPicker(false);
             return;
