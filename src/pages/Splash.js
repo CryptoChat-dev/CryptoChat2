@@ -87,7 +87,7 @@ const Splash = () => {
                 <div class="container">
                     <div class="logo"></div>
                     <h1 class="title splash">CryptoChat 2.2</h1>
-                    <h2 class="subtitle splash">Simple, secure and ephermeral anonymous messaging.</h2>
+                    <h2 class="subtitle splash">Simple, secure and ephemeral anonymous messaging.</h2>
                 </div>
                 <div class="messagebox-parent">
                     <div class="messagebox">
