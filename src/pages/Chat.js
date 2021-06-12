@@ -121,11 +121,12 @@ const Chat = () => {
     }, []);
 
     const fileOriginCheck = (uid) => {
+        console.log(state.sentFiles)
         console.log(`[File Origin] Origin check for ${uid}.`);
         console.log(`[File Origin] Sent Files:`);
         console.log(state.sentFiles);
         var posCheck = state.sentFiles.indexOf(uid);
-        console.log(`[File Origin] Pos check: {posCheck}`)
+        console.log(`[File Origin] Pos check: ${posCheck}`)
         if (posCheck > -1) {
             console.log("[File Origin Check] This is my file.");
             return true;
@@ -378,7 +379,6 @@ const Chat = () => {
                 setMessageIcon('faPaperclip')
                 setDisabled(false);
                 close();
-                console.log(state.sentFiles)
             };
             return;
         }
