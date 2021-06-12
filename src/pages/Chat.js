@@ -466,6 +466,10 @@ const Chat = () => {
     }
 
     function handleEmojiButtonClick() {
+        if (fileSelected === true) {
+            return;
+        }
+        
         if (showEmojiPicker === true) {
             setShowEmojiPicker(false);
             return;
@@ -551,8 +555,7 @@ const Chat = () => {
                     borderRadius: "10px"
                 }
             }
-            isOpen={showDialog}
-            >
+            isOpen={showDialog}>
         <div class="loader"></div>
             <h1>Uploading File...</h1>
             <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
