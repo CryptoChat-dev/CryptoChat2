@@ -17,7 +17,7 @@ import CryptoJS from 'crypto-js';
 // Icons
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
+import {faPaperclip, faTimes, faLaugh, faPaperPlane} from '@fortawesome/free-solid-svg-icons'
 
 // Util Imports
 
@@ -302,18 +302,6 @@ const Chat = () => {
             } catch(err) {
                 return;
             }
-        // } else {
-        //     setReceived((messages) => [// Display a decryption error message
-        //         ...messages,
-        //         <div ref={divRef}>
-        //             <p>
-        //                 <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
-        //         </div>
-        //     ]);
-        //     console.log(`Not my message: ${
-        //         msg.name
-        //     }`)
-        // }
     }
 
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
@@ -652,9 +640,10 @@ const Chat = () => {
                 }
             }
             isOpen={showDialog}>
-        <div class="loader"></div>
+            <div class="loader"></div>
+            <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
             <h1>Uploading File...</h1>
-            <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
+            <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
         </Dialog>
         <Dialog style={
                 {
@@ -666,8 +655,7 @@ const Chat = () => {
                     borderRadius: "10px"
                 }
             }
-            isOpen={showDialogTL}
-            onDismiss={closeTL}>
+            isOpen={showDialogTL}>
                 <h1>File Too Large</h1>
                 <p>The file you selected is larger than the size limit ({process.env.REACT_APP_SIZE_LIMIT} MB) and cannot be uploaded.</p>
                 <div class="modalButtons">

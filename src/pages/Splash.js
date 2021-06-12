@@ -155,8 +155,7 @@ const Splash = () => {
                             borderRadius: "10px"
                         }
                     }
-                    isOpen={showDialog}
-                    onDismiss={close}>
+                    isOpen={showDialog}>
                     <h1>Weak Key</h1>
                     <p>The key you entered is insecure. It is recommended to use the random button. Do you wish to override?</p>
                     <div class="modalButtons">

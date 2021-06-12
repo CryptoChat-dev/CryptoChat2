@@ -239,6 +239,10 @@ h1 {
     color: rgb(253, 93, 253);
 }
 
+.icon {
+    font-size: 3rem;
+}
+
 /* Input */
 
 .fileinput {
