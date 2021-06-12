@@ -121,6 +121,8 @@ const Chat = () => {
     }, []);
 
     const fileOriginCheck = (uid) => {
+        console.log(`[File Origin] Origin check for ${uid}.`);
+        console.log(`[File Origin] Sent Files: ${state.sentFiles}`);
         if (state.sentFiles.indexOf(Number(uid)) > -1) {
             console.log("[File Origin Check] This is my file.");
             return true;
@@ -209,10 +211,9 @@ const Chat = () => {
         playNotification();
     }
 
-    function fileHandler(msg, sentFiles) {
+    function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        console.log(state.sentFiles)
         if (fileOriginCheck(msg.uid) === true) {
             console.log("[File Handler] This is the origin. Returning.");
             return;
