@@ -507,6 +507,11 @@ const Chat = () => {
                     </h2>
                 </div>
                 <div class="chatbox-messages">
+                    {showEmojiPicker === true && window.innerWidth < 800 &&
+                                <div class="emojiPicker">
+                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
+                                </div>
+                    }
                     <div class="messageviewer-parent">
                         <div id="messageviewer" name="messageviewer" class="messageviewer">
                             <div class="messagetxt" id="messagetxt"> {received}</div>
@@ -534,7 +539,7 @@ const Chat = () => {
                                 }</button>
                                 <button class="iconbutton emoji" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
                             </div>
-                            {showEmojiPicker === true &&
+                            {showEmojiPicker === true && window.innerWidth > 800 &&
                                 <div class="emojiPicker">
                                     <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
                                 </div>
