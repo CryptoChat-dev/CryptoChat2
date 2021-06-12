@@ -210,22 +210,25 @@ const Chat = () => {
 
         if (decryptedUsername !== '') { // if the username is an empty value, stop
             if (decryptedMIME === "image/jpeg" || decryptedMIME === "image/png") {
-                const decryptedData = crypt.decryptMessage(msg.data, state.key); // Decrypt file data
-                console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-                const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
-                var objectURL = URL.createObjectURL(blob);
                 setReceived((messages) => [// Display
                     ...messages,
                     <div ref={divRef}>
                         <p>
-                            <b> {decryptedUsername} sent an attachment</b>.
-                            <img id={decryptedName} alt={decryptedName} />
+                            <b> {decryptedUsername} sent an image</b>.
+                            <span class="decrypt"
+                                onClick={
+                                    () => {
+                                        // Pass the encrypted file data, decrypted name and decrypted MIME
+                                        // to the file decryption/save function
+                                        handlePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                    }
+                            }> Click to preview {decryptedName}.</span>
                         </p>
                     </div>
                 ]);    
-                document.getElementById(decryptedName).src = objectURL;
                 return;
             }
+
             setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
@@ -239,6 +242,7 @@ const Chat = () => {
                                     handleDecryptClick(msg.data, decryptedName, decryptedMIME)
                                 }
                         }> Click to decrypt {decryptedName}.</span>
+                        <img id={decryptedName} alt={decryptedName} />
                     </p>
                 </div>
             ]);
@@ -273,6 +277,14 @@ const Chat = () => {
         console.log("[Decrypt Button] Blob created.");
         console.log(blob); // Print blob for debugging
         saveBlob(blob, decryptedName); // Save blob
+    }
+
+    const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
+        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+        var objectURL = URL.createObjectURL(blob);
+        document.getElementById(decryptedName).src = objectURL;
     }
 
     function broadcastLeave() {
