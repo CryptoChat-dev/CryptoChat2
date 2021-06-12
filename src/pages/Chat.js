@@ -209,6 +209,23 @@ const Chat = () => {
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
 
         if (decryptedUsername !== '') { // if the username is an empty value, stop
+            if (decryptedMIME === "image/jpeg" || decryptedMIME === "image/png") {
+                const decryptedData = crypt.decryptMessage(msg.data, state.key); // Decrypt file data
+                console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+                const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+                var objectURL = URL.createObjectURL(blob);
+                setReceived((messages) => [// Display
+                    ...messages,
+                    <div ref={divRef}>
+                        <p>
+                            <b> {decryptedUsername} sent an attachment</b>.
+                            <img id={decryptedName} alt={decryptedName} />
+                        </p>
+                    </div>
+                ]);    
+                document.getElementById(decryptedName).src = objectURL;
+                return;
+            }
             setReceived((messages) => [// Display
                 ...messages,
                 <div ref={divRef}>
