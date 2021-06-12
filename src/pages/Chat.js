@@ -353,7 +353,7 @@ const Chat = () => {
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
                 console.log("[Send Button] File data encrypted. Sending...")
                 var stream = ss.createStream();
-                ss(socket).emit('profile-image', stream, JSON.parse(JSON.stringify({
+                ss(socket).emit('file event', stream, JSON.parse(JSON.stringify({
                     "roomName": state.roomName,
                     "user_name": encryptedUsername,
                     "name": encryptedName,
