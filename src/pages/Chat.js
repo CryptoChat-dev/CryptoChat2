@@ -212,8 +212,7 @@ const Chat = () => {
     function fileHandler(msg, sentFiles) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        console.log(sentFiles)
-        console.log(sentFiles.indexOf(Number(msg.uid)))
+        console.log(state.sentFiles)
         if (fileOriginCheck(msg.uid) === true) {
             console.log("[File Handler] This is the origin. Returning.");
             return;
