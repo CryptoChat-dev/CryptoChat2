@@ -399,7 +399,7 @@ const Chat = () => {
             case '/clear':
                 const div = document.getElementById('messagetxt');
                 while(div.firstChild){
-                    div.removeNode(div.firstChild);
+                    div.parentNode.removeNode(div.firstChild);
                 }
                 break;
             default:
