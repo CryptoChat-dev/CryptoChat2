@@ -223,7 +223,7 @@ const Chat = () => {
                                         () => {
                                             // Pass the encrypted file data, decrypted name and decrypted MIME
                                             // to the file decryption
-                                            handleImagePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                         }
                                 }> Click to preview {decryptedName}.</span>
                                 <img id={decryptedName} class="previewedImage" alt={decryptedName} style={{display: 'none'}}></img>
@@ -243,7 +243,7 @@ const Chat = () => {
                                         () => {
                                             // Pass the encrypted file data, decrypted name and decrypted MIME
                                             // to the file decryption
-                                            handleAudioPreviewClick(msg.data, decryptedName, decryptedMIME)
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                         }
                                 }> Click to preview {decryptedName}.</span>
                                 <br></br>
@@ -263,7 +263,7 @@ const Chat = () => {
                                         () => {
                                             // Pass the encrypted file data, decrypted name and decrypted MIME
                                             // to the file decryption
-                                            handleVideoPreviewClick(msg.data, decryptedName, decryptedMIME)
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
                                         }
                                 }> Click to preview {decryptedName}.</span>
                                 <br></br>
@@ -325,51 +325,23 @@ const Chat = () => {
         saveBlob(blob, decryptedName); // Save blob
     }
 
-    const handleImagePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
-        const imageElement = document.getElementById(decryptedName);
-        if (imageElement.style.cssText === "display: inline-block;") {
-            imageElement.style = "display: none;"
+    const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const fileElement = document.getElementById(decryptedName);
+        if (fileElement.style.cssText === "display: inline-block;") {
+            fileElement.style = "display: none;"
             return;
         }
 
-        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
-        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
-        var objectURL = URL.createObjectURL(blob);
-        document.getElementById(decryptedName).src = objectURL;
-        document.getElementById(decryptedName).style = 'display: inline-block;';
-    }
-
-    const handleAudioPreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
-        const imageElement = document.getElementById(decryptedName);
-        if (imageElement.style.cssText === "display: inline-block;") {
-            imageElement.style = "display: none;"
-            return;
+        if (fileElement.src === "") {
+            const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
+            console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+            const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+            var objectURL = URL.createObjectURL(blob);
+            document.getElementById(decryptedName).src = objectURL;
         }
-
-        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
-        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
-        var objectURL = URL.createObjectURL(blob);
-        document.getElementById(decryptedName).src = objectURL;
+        
         document.getElementById(decryptedName).style = 'display: inline-block;';
     }
-
-    const handleVideoPreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
-        const imageElement = document.getElementById(decryptedName);
-        if (imageElement.style.cssText === "display: inline-block;") {
-            imageElement.style = "display: none;"
-            return;
-        }
-
-        const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
-        console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
-        const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
-        var objectURL = URL.createObjectURL(blob);
-        document.getElementById(decryptedName).src = objectURL;
-        document.getElementById(decryptedName).style = 'display: inline-block;';
-    }
-
 
     function broadcastLeave() {
         // Broadcasts a leave event to the room
