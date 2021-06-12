@@ -63,8 +63,6 @@ const Chat = () => {
     const openTL = () => setShowDialogTL(true);
     const closeTL = () => setShowDialogTL(false);
     
-    const [sentFiles, setSentFiles] = React.useState([]);
-
     // Before the tab closes:
     window.onbeforeunload = (event) => {
         const e = event || window.event;
@@ -119,21 +117,6 @@ const Chat = () => {
             socket.off('leave response');
         }
     }, []);
-
-    const fileOriginCheck = (uid) => {
-        console.log(state.sentFiles)
-        console.log(`[File Origin] Origin check for ${uid}.`);
-        console.log(`[File Origin] Sent Files:`);
-        console.log(state.sentFiles);
-        var posCheck = state.sentFiles.indexOf(uid);
-        console.log(`[File Origin] Pos check: ${posCheck}`)
-        if (posCheck > -1) {
-            console.log("[File Origin Check] This is my file.");
-            return true;
-        }
-
-        return false;
-    }
 
     function joinHandler(msg) {
         // Handles join responses
@@ -218,16 +201,13 @@ const Chat = () => {
     function fileHandler(msg) {
         // Handles incoming file responses
         console.log(msg); // Print file response for debugging
-        if (fileOriginCheck(msg.uid) === true) {
-            console.log("[File Handler] This is the origin. Returning.");
-            return;
-        }
 
-        console.log("[File Handler] External file detected.");
+        console.log("[File Handler] file received");
 
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
+
         if (decryptedUsername !== '') { // if the username is an empty value, stop
             setReceived((messages) => [// Display
                 ...messages,
@@ -245,7 +225,9 @@ const Chat = () => {
                     </p>
                 </div>
             ]);
+
             playNotification();
+
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -570,7 +552,7 @@ const Chat = () => {
                 }
             }
             isOpen={showDialog}
-            onDismiss={close}>
+            >
         <div class="loader"></div>
             <h1>Uploading File...</h1>
             <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
