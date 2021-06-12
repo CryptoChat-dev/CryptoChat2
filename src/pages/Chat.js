@@ -396,15 +396,10 @@ const Chat = () => {
             case '/unflip':
                 socketEmit('┬─┬ ノ( ゜-゜ノ)');
                 break;
-            case '/clear':
-                const div = document.getElementById('messagetxt');
-                while(div.firstChild){
-                    div.parentNode.removeNode(div.firstChild);
-                }
-                break;
             default:
                 socketEmit(message);
         }
+        
         try {
             // Scroll down
             divRef.current.scrollIntoView({behavior: 'smooth'});
