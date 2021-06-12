@@ -60,6 +60,7 @@ export function getWordNum(length) { // get the random words from the dice ware 
         var theword = eff[newnum.join('')]
         wordslist.push(theword.charAt(0).toUpperCase() + theword.slice(1))
     }
+    wordslist.splice(secureRandom(length), 0, '_');
     return wordslist.join('')
 }
 

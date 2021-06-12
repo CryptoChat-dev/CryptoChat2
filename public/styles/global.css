@@ -183,7 +183,7 @@ h1 {
     width: 6em;
     height: 6em;
     border: 1.1em solid var(--txt-color);
-    border-left: 1.1em solid #000000;
+    border-left: 1.1em solid var(--bttn-color);
     border-radius: 50%;
     animation: load8 1.1s infinite linear;
     transition: opacity 0.3s;
