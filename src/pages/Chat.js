@@ -122,8 +122,11 @@ const Chat = () => {
 
     const fileOriginCheck = (uid) => {
         console.log(`[File Origin] Origin check for ${uid}.`);
-        console.log(`[File Origin] Sent Files: ${state.sentFiles}`);
-        if (state.sentFiles.indexOf(Number(uid)) > -1) {
+        console.log(`[File Origin] Sent Files:`);
+        console.log(state.sentFiles);
+        var posCheck = state.sentFiles.indexOf(uid);
+        console.log(`[File Origin] Pos check: {posCheck}`)
+        if (posCheck > -1) {
             console.log("[File Origin Check] This is my file.");
             return true;
         }
