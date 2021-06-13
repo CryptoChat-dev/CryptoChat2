@@ -131,6 +131,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
@@ -160,6 +161,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has left the room.</b></p>
                 </div>
             ]);
@@ -241,6 +243,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b title={new Date().toLocaleString()}> {decryptedUsername} sent an image</b>.
                                 <span class="decrypt"
                                     onClick={
