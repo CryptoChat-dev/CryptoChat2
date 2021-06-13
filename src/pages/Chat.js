@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {Helmet} from 'react-helmet';
 import {useHistory} from 'react-router-dom';
 import {Context} from '../Components/Store';
-// import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
 import Picker from 'emoji-picker-react';
 
@@ -136,7 +135,6 @@ const Chat = () => {
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
-            // playNotification();
             notification.play();
             try {
                 // Scroll down
@@ -167,7 +165,7 @@ const Chat = () => {
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has left the room.</b></p>
                 </div>
             ]);
-            playNotification();
+            notification.play();
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -223,7 +221,7 @@ const Chat = () => {
             ]);
             console.log(`Not my message: ${msg}`)
         }
-        playNotification();
+        notification.play();
     }
 
     function fileHandler(msg) {
@@ -341,7 +339,7 @@ const Chat = () => {
                 }
             }
 
-            playNotification();
+            notification.play();
 
             try {
                 // Scroll down
