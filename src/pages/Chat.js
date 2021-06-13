@@ -231,7 +231,7 @@ const Chat = () => {
         console.log("[File Handler] file received");
 
         var receivedHMAC = msg.hmac;
-        var calculatedHMAC = CryptoJS.HmacSHA256(msg.data, state.key);
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.data, state.key).toString();
 
         if (receivedHMAC !== calculatedHMAC) {
             setReceived((messages) => [// Display a decryption error
