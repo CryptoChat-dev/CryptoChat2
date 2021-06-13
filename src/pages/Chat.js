@@ -81,6 +81,8 @@ const Chat = () => {
             history.push('/');
             return;
         }
+
+        notification.volume = 0.5;
         
         // Hash the room key with SHA-512
         var roomName = CryptoJS.SHA512(state.key).toString();
