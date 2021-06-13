@@ -64,6 +64,19 @@ export function getWordNum(length) { // get the random words from the dice ware 
     return wordslist.join('')
 }
 
+export function randomUsername(length) { // get the random words from the dice ware dict
+    var wordslist = []
+    for (var i = 0; i < length; i++) {
+        var newnum = []
+        for (var j = 0; j < 5; j += 1) { // roll a 6 sided die
+            newnum.push(secureRandom(6) + 1)
+        }
+        var theword = eff[newnum.join('')]
+        wordslist.push(theword.charAt(0).toUpperCase() + theword.slice(1))
+    }
+    return wordslist.join('')
+}
+
 export function randomUID(length) {
     var UIDlist = [];
     for (var i = 0; i < length; i++) {

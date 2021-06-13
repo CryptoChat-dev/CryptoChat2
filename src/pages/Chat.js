@@ -323,7 +323,6 @@ const Chat = () => {
                 }
             }
 
-
             playNotification();
 
             try {
@@ -639,13 +638,14 @@ const Chat = () => {
                                     ref={hiddenFileInput}
                                     onChange={handleInputChange}/>
                                 <button class="iconbutton attach"
+                                    title="Attach a file"
                                     onClick={handleMessageButtonClick}> {
                                     messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
                                 }
                                     {
                                     messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
                                 }</button>
-                                <button class="iconbutton emoji" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
+                                <button class="iconbutton emoji" title="Open Emoji Picker" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
                             </div>
                             {showEmojiPicker === true &&
                                 <div class="emojiPicker">

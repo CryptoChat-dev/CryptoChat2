@@ -14,7 +14,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faRandom} from '@fortawesome/free-solid-svg-icons'
 
 // Files
-import {scorePassword, getWordNum} from '../utils/password';
+import {scorePassword, getWordNum, randomUsername} from '../utils/password';
 
 // Code
 
@@ -102,7 +102,7 @@ const Splash = () => {
                                         (e) => setUsername(e.target.value)
                                     }/>
                                     <div class="randomize-parent">
-                                        <button class="iconbutton random" title="Generate Random Username" onClick={() => {setUsername(getWordNum(2))}}>
+                                        <button class="iconbutton random" title="Generate Random Username" onClick={() => {setUsername(randomUsername(2))}}>
                                             <FontAwesomeIcon icon={faRandom} />
                                         </button>
                                     </div>
