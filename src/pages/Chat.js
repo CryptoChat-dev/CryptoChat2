@@ -265,6 +265,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent an audio file</b>.
                                 <span class="decrypt"
                                     onClick={
@@ -285,6 +286,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent a video</b>.
                                 <span class="decrypt"
                                     onClick={
@@ -305,6 +307,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent an attachment</b>.
                                 <span class="decrypt"
                                     onClick={
