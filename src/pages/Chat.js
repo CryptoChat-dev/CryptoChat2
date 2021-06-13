@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {Helmet} from 'react-helmet';
 import {useHistory} from 'react-router-dom';
 import {Context} from '../Components/Store';
-import useSound from 'use-sound';
+// import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
 import Picker from 'emoji-picker-react';
 
@@ -40,7 +40,7 @@ const Chat = () => {
     // State Varibles
     const [userCount, setUserCount] = React.useState(null)
 
-    const [playNotification] = useSound(notificationSound);
+    const [notification] = React.useState(new Audio(notificationSound));
 
     const [state, dispatch] = useContext(Context);
 
@@ -136,7 +136,8 @@ const Chat = () => {
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
-            playNotification();
+            // playNotification();
+            notification.play();
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
