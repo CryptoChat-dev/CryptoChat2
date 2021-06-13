@@ -177,7 +177,7 @@ const Chat = () => {
 
     function messageHandler(msg) {
         // Handles incoming message responses
-        var receivedHMAC = msg.hmac;
+        var receivedHMAC = msg.hmac.toString();
         var calculatedHMAC = CryptoJS.HmacSHA256(msg.message, state.key);
         if (receivedHMAC !== calculatedHMAC) {
             setReceived((messages) => [// Display a decryption error
@@ -392,7 +392,7 @@ const Chat = () => {
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
             "message": encryptedMessage,
-            "hmac": CryptoJS.HmacSHA256(encryptedMessage, state.key)
+            "hmac": CryptoJS.HmacSHA256(encryptedMessage, state.key).toString()
         });
     }
 
