@@ -230,6 +230,22 @@ const Chat = () => {
 
         console.log("[File Handler] file received");
 
+        var receivedHMAC = msg.hmac;
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.data, state.key);
+
+        if (receivedHMAC !== calculatedHMAC) {
+            setReceived((messages) => [// Display a decryption error
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
+            console.log(`Unable to verify authenticity.\nReceived HMAC: ${receivedHMAC}\nCalculated HMAC: ${calculatedHMAC}\nReceived message:`);
+            console.log(msg);
+            return;
+        }
+
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
@@ -434,6 +450,7 @@ const Chat = () => {
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
+                var calculatedHMAC = CryptoJS.HmacSHA256(encryptedData, state.key).toString();
                 console.log("[Send Button] File data encrypted. Sending...")
 
                 var stream = ss.createStream();
@@ -443,7 +460,8 @@ const Chat = () => {
                         "user_name": encryptedUsername,
                         "name": encryptedName,
                         "type": encryptedMIME,
-                        "data": encryptedData
+                        "data": encryptedData,
+                        "hmac": calculatedHMAC
                     });
                 } catch(err) {
                     console.log("[Send Button] Couldn't send file.");
