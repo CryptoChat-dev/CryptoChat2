@@ -26,8 +26,9 @@ import {crypt} from '../utils/encryption.js';
 
 // Socket.IO
 import io from "socket.io-client";
+import {socket} from "../utils/Socket";
 const ss = require('socket.io-stream')
-let socket;
+
 
 
 // Code
