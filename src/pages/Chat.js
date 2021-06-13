@@ -199,6 +199,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
                         <b title={new Date().toLocaleString()}> {decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);

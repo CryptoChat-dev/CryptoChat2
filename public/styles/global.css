@@ -8,6 +8,7 @@
     --bttn-color: black;
     --modal-color: #292929;
     --decrypt-color: rgb(119, 119, 255);
+    --date-color: rgb(139, 139, 139);
 }
 
 [data-theme='light'] {
@@ -20,6 +21,7 @@
     --bttn-color: white;
     --modal-color: #b3b3b3;
     --decrypt-color: blue;
+    --date-color: rgb(104, 104, 104);
 }
 
 * {
@@ -247,6 +249,11 @@ h1 {
     float: right;
     margin-right: 2rem;
     font-size: 1.5rem;
+}
+
+.dateTime {
+    color: var(--date-color);
+    font-size: 0.5rem;
 }
 
 /* Input */
