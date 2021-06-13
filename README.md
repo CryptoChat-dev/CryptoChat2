@@ -54,7 +54,7 @@ Bob and Alice enter their different usernames and the same room key on the splas
 
 Bob says, "Hello Alice!". Bob's client uses the plaintext encryption key to locally encrypt his username (Bob) and message (Hello Alice!). Before sending the message, his client also generates a SHA-256 [HMAC](https://en.wikipedia.org/wiki/HMAC) hash and attaches it to the message so that Alice can verify the message's authenticity. This hash can make it harder for a middle-man to tamper with Bob's message. Bob's client sends the SHA-512 hashed version of their encryption key along with his encrypted username, message and message HMAC hash to the server. 
 
-Alice's client receives the end-to-end message from the backend's using Socket.IO. First, her client calculates the SHA-256 HMAC hash and compares it with the one she received from Bob. If the hashes match, her client decrypts the encrypted username and message using her local encryption key that she entered on the splash screen. Otherwise, her client refuses to decrypt the message and tells Alice that there was an error verifying the authenticity of the received information.
+Alice's client receives the end-to-end encrypted message from the backend's using Socket.IO. First, her client calculates the SHA-256 HMAC hash and compares it with the one she received from Bob. If the hashes match, her client decrypts the encrypted username and message using her local encryption key that she entered on the splash screen. Otherwise, her client refuses to decrypt the message and tells Alice that there was an error verifying the authenticity of the received information.
 
 ### File Attachment
 
@@ -62,7 +62,7 @@ Alice's client receives the end-to-end message from the backend's using Socket.I
 
 Bob attaches a very sensitive PDF document on CryptoChat.
 
-Upon clicking the "Send" button, Bob's client encodes the file using [Base64](https://en.wikipedia.org/wiki/Base64), end-to-end encrypts the text data and calculates a SHA-256 HMAC hash. Along with the actual file data itself, its [MIME type](https://en.wikipedia.org/wiki/Media_type) is also encrypted and stored in memory. This end-to-end encrypted data is then sent to the backend webserver using Socket.IO with his end-to-end encrypted username and SHA-512 hashed encryption key as the room key. 
+Upon clicking the "Send" button, Bob's client encodes the file using [Base64](https://en.wikipedia.org/wiki/Base64), end-to-end encrypts the text data and calculates a SHA-256 HMAC hash. Along with the actual file data itself, its [MIME type](https://en.wikipedia.org/wiki/Media_type) is also encrypted and stored in memory. This end-to-end encrypted data is then sent to the backend webserver using Socket.IO with his end-to-end encrypted username and SHA-512 hashed encryption key as the room identifier. 
 
 After Bob's client finishes uploading the document, Alice's client downloads the encrypted file content and MIME type. Before decrypting the data, her client calculates the SHA-256 HMAC hash and compares it with the one she received from Bob. If the hashes do not match, Alice's client tells her that there was an error verifying the authenticity of the received information. 
 
