@@ -612,7 +612,7 @@ const Chat = () => {
                     <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
                         state.key
                     }</p></p>
-                    <p class="icon users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
+                    <p class="icon users" title="Connected Users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
