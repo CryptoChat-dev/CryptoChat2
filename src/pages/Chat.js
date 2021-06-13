@@ -177,6 +177,19 @@ const Chat = () => {
 
     function messageHandler(msg) {
         // Handles incoming message responses
+        var receivedHMAC = msg.hmac;
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.message, state.key);
+        if (receivedHMAC !== calculatedHMAC) {
+            setReceived((messages) => [// Display a decryption error
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
+            console.log(`Unable to verify authenticity: ${msg}`)
+            return;
+        }
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedMessage = crypt.decryptMessage(msg.message, state.key); // Decrypt the message
         if (decryptedUsername !== '' || decryptedMessage !== '') { // if the username and message are empty values, stop
@@ -372,10 +385,13 @@ const Chat = () => {
 
     function socketEmit(msg) {
         // Emits message events
+        var encryptedMessage = crypt.encryptMessage(msg, state.key);
+
         socket.emit('chat event', {
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
-            "message": crypt.encryptMessage(msg, state.key)
+            "message": encryptedMessage,
+            "hmac": CryptoJS.HmacSHA256(encryptedMessage, state.key)
         });
     }
 
