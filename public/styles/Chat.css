@@ -99,7 +99,7 @@ a {
     color: var(--txt-color);
 }
 
-.messageviewer p {
+.messageviewer p:not(.dateTime) {
     margin-left: 5%;
 }
 
