@@ -1,4 +1,4 @@
-# CryptoChat 2.2 [![CodeFactor](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2/badge)](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2) [![Memes](https://img.shields.io/badge/need-memes-red)](https://img.shields.io/badge/need-memes-red)
+# CryptoChat 2.3 [![CodeFactor](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2/badge)](https://www.codefactor.io/repository/github/cryptochat-dev/cryptochat2) [![Memes](https://img.shields.io/badge/need-memes-red)](https://img.shields.io/badge/need-memes-red)
 
 [Official Instance](https://cryptochat.dev), [Beta Instance](https://beta.cryptochat.dev), [Legal](https://cryptochat.dev/legal), [Email Us](mailto:contact@cryptochat.dev)
 
@@ -20,7 +20,7 @@ CryptoChat supports end-to-end encrypted file transfer\*, so you can send sensit
 
 ### Encryption
 
-All messages sent through the official CryptoChat clients are end-to-end encrypted locally, meaning nobody except for the message recipients can read their contents. If you need more piece of mind during your chats, use the random key generator for an extra-secure key (it would take 3,505 years to crack!).
+All messages sent through the official CryptoChat clients are end-to-end encrypted locally, meaning nobody except for the message recipients can read their contents. If you need more piece of mind during your chats, use the random key generator for an extra-secure key (it would take 27,255,689 years to crack!<sub>[Source](https://www.rempe.us/diceware/#eff)</sub>).
 
 ### Ephemeral
 

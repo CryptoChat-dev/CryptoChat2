@@ -17,7 +17,7 @@ import CryptoJS from 'crypto-js';
 // Icons
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPaperclip, faTimes, faLaugh} from '@fortawesome/free-solid-svg-icons'
+import {faPaperclip, faTimes, faLaugh, faPaperPlane, faUsers} from '@fortawesome/free-solid-svg-icons'
 
 // Util Imports
 
@@ -37,6 +37,8 @@ const Chat = () => {
     const hiddenFileInput = React.useRef(null);
 
     // State Varibles
+    const [userCount, setUserCount] = React.useState(null)
+
     const [playNotification] = useSound(notificationSound);
 
     const [state, dispatch] = useContext(Context);
@@ -104,6 +106,7 @@ const Chat = () => {
             socket.on('file response', fileHandler);
             socket.on('join response', joinHandler);
             socket.on('leave response', leaveHandler);
+            socket.on('user count', userCountHandler);
         } catch (err) {
             // If there's an error, cancel.
             history.push('/');
@@ -115,6 +118,7 @@ const Chat = () => {
             socket.off('file response');
             socket.off('join response')
             socket.off('leave response');
+            socket.off('user count');
         }
     }, []);
 
@@ -140,6 +144,11 @@ const Chat = () => {
         } else {
             console.log(`Not my message: ${msg}`)
         }
+    }
+
+    function userCountHandler(msg) {
+        // Handles user count responses
+        setUserCount(msg.count);
     }
 
     function leaveHandler(msg) {
@@ -209,22 +218,90 @@ const Chat = () => {
         var decryptedMIME = crypt.decryptMessage(msg.type, state.key); // Decrypt the MIME type
 
         if (decryptedUsername !== '') { // if the username is an empty value, stop
-            setReceived((messages) => [// Display
-                ...messages,
-                <div ref={divRef}>
-                    <p>
-                        <b> {decryptedUsername} sent an attachment</b>.
-                        <span class="decrypt"
-                            onClick={
-                                () => {
-                                    // Pass the encrypted file data, decrypted name and decrypted MIME
-                                    // to the file decryption/save function
-                                    handleDecryptClick(msg.data, decryptedName, decryptedMIME)
-                                }
-                        }> Click to decrypt {decryptedName}.</span>
-                    </p>
-                </div>
-            ]);
+            switch(decryptedMIME) {
+                case 'image/jpeg':
+                case 'image/gif':
+                case 'image/png':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an image</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <img id={decryptedName} class="previewedImage" alt={decryptedName} style={{display: 'none'}}></img>
+                            </p>
+                        </div>
+                    ]);    
+                    return;
+                case 'audio/mpeg':
+                case 'audio/wav':
+                case 'audio/flac':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an audio file</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <br></br>
+                                <audio class="previewedImage" id={decryptedName} controls style={{display: 'none'}}/>
+                            </p>
+                        </div>
+                    ]);    
+                    return;
+                case 'video/mp4':
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent a video</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption
+                                            handlePreviewClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to preview {decryptedName}.</span>
+                                <br></br>
+                                <video class="previewedImage" id={decryptedName} controls style={{display: 'none'}}/>
+                            </p>
+                        </div>
+                    ]);    
+                    return;  
+                default:
+                    setReceived((messages) => [// Display
+                        ...messages,
+                        <div ref={divRef}>
+                            <p>
+                                <b> {decryptedUsername} sent an attachment</b>.
+                                <span class="decrypt"
+                                    onClick={
+                                        () => {
+                                            // Pass the encrypted file data, decrypted name and decrypted MIME
+                                            // to the file decryption/save function
+                                            handleDecryptClick(msg.data, decryptedName, decryptedMIME)
+                                        }
+                                }> Click to decrypt {decryptedName}.</span>
+                            </p>
+                        </div>
+                    ]);
+                }
+            }
+
 
             playNotification();
 
@@ -234,18 +311,6 @@ const Chat = () => {
             } catch(err) {
                 return;
             }
-        } else {
-            setReceived((messages) => [// Display a decryption error message
-                ...messages,
-                <div ref={divRef}>
-                    <p>
-                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
-                </div>
-            ]);
-            console.log(`Not my message: ${
-                msg.name
-            }`)
-        }
     }
 
     function handleDecryptClick(encryptedData, decryptedName, decryptedMIME) {
@@ -256,6 +321,24 @@ const Chat = () => {
         console.log("[Decrypt Button] Blob created.");
         console.log(blob); // Print blob for debugging
         saveBlob(blob, decryptedName); // Save blob
+    }
+
+    const handlePreviewClick = (encryptedData, decryptedName, decryptedMIME) => {
+        const fileElement = document.getElementById(decryptedName);
+        if (fileElement.style.cssText === "display: inline-block;") {
+            fileElement.style = "display: none;"
+            return;
+        }
+
+        if (fileElement.src === "") {
+            const decryptedData = crypt.decryptMessage(encryptedData, state.key); // Decrypt file data
+            console.log(`[Decrypt Button] Decrypted Data.\n[DecryptButton] Converting base64 to ${decryptedMIME} blob.`)
+            const blob = b64toBlob(atob(decryptedData), decryptedMIME); // Decode base64 and create blob        
+            var objectURL = URL.createObjectURL(blob);
+            document.getElementById(decryptedName).src = objectURL;
+        }
+        
+        document.getElementById(decryptedName).style = 'display: inline-block;';
     }
 
     function broadcastLeave() {
@@ -378,6 +461,8 @@ const Chat = () => {
                         <br></br>
                         <b>CryptoChat Command Help</b>
                         <br></br>
+                        /theme - Change app theme.
+                        <br></br>
                         /shrug - Send a shrug emoticon.
                         <br></br>
                         /tableflip - Send a table flipping emoticon.
@@ -403,6 +488,9 @@ const Chat = () => {
                 break;
             case '/unflip':
                 socketEmit('┬─┬ ノ( ゜-゜ノ)');
+                break;
+            case '/theme':
+                changeTheme();
                 break;
             default:
                 socketEmit(message);
@@ -501,6 +589,7 @@ const Chat = () => {
                     <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
                         state.key
                     }</p></p>
+                    <p class="icon users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
@@ -560,6 +649,24 @@ const Chat = () => {
             </div>
 
         </div>
+        {fileSelected === true &&
+            <Dialog style={
+                    {
+                        backgroundColor: state.modalColor,
+                        minWidth: "calc(min(350px,90%))",
+                        width: "25%",
+                        padding: "2%",
+                        textAlign: "center",
+                        borderRadius: "10px"
+                    }
+                }
+                isOpen={showDialog}>
+                <div class="loader"></div>
+                <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
+                <h1>Uploading File...</h1>
+                <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
+            </Dialog>
+        }
         <Dialog style={
                 {
                     backgroundColor: state.modalColor,
@@ -570,23 +677,7 @@ const Chat = () => {
                     borderRadius: "10px"
                 }
             }
-            isOpen={showDialog}>
-        <div class="loader"></div>
-            <h1>Uploading File...</h1>
-            <p>Please standby while your file is being end-to-end encrypted and uploaded to the server.</p>
-        </Dialog>
-        <Dialog style={
-                {
-                    backgroundColor: state.modalColor,
-                    minWidth: "calc(min(350px,90%))",
-                    width: "25%",
-                    padding: "2%",
-                    textAlign: "center",
-                    borderRadius: "10px"
-                }
-            }
-            isOpen={showDialogTL}
-            onDismiss={closeTL}>
+            isOpen={showDialogTL}>
                 <h1>File Too Large</h1>
                 <p>The file you selected is larger than the size limit ({process.env.REACT_APP_SIZE_LIMIT} MB) and cannot be uploaded.</p>
                 <div class="modalButtons">
