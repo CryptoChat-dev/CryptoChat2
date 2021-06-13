@@ -137,7 +137,7 @@ const Chat = () => {
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
-            notification.play();
+            if (document.hasFocus() === false) {notification.play()};
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -167,7 +167,7 @@ const Chat = () => {
                         <b title={new Date().toLocaleString()}> {decryptedUsername} has left the room.</b></p>
                 </div>
             ]);
-            notification.play();
+            if (document.hasFocus() === false) {notification.play()};
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -223,7 +223,7 @@ const Chat = () => {
             ]);
             console.log(`Not my message: ${msg}`)
         }
-        notification.play();
+        if (document.hasFocus() === false) {notification.play()};
     }
 
     function fileHandler(msg) {
@@ -341,7 +341,7 @@ const Chat = () => {
                 }
             }
 
-            notification.play();
+            if (document.hasFocus() === false) {notification.play()};
 
             try {
                 // Scroll down
@@ -700,7 +700,6 @@ const Chat = () => {
                     }
                 }
                 isOpen={showDialog}>
-                <div class="loader"></div>
                 <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
                 <h1>Uploading File...</h1>
                 <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
