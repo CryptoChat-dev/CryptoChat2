@@ -131,7 +131,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername} has joined the room.</b></p>
+                        <b title={() => {new Date().toLocaleString()}}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
             playNotification();
@@ -160,7 +160,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername} has left the room.</b></p>
+                        <b title={() => {new Date().toLocaleString()}}> {decryptedUsername} has left the room.</b></p>
                 </div>
             ]);
             playNotification();
@@ -199,7 +199,7 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername}</b>: {decryptedMessage}</p>
+                        <b title={() => {new Date().toLocaleString()}}> {decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);
             try {
@@ -240,7 +240,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
-                                <b> {decryptedUsername} sent an image</b>.
+                                <b title={() => {new Date().toLocaleString()}}> {decryptedUsername} sent an image</b>.
                                 <span class="decrypt"
                                     onClick={
                                         () => {
