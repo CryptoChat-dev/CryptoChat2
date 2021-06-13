@@ -91,7 +91,7 @@ const Chat = () => {
         
         if (joinedSent === false) {
             // If the join message hasn't been sent, do it.
-            socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
+            // socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
             socket.emit('join', {
                 "roomName": roomName,
                 "user_name": crypt.encryptMessage(state.username, state.key)
@@ -668,7 +668,7 @@ const Chat = () => {
                             </div>
                             {showEmojiPicker === true &&
                                 <div class="emojiPicker">
-                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
+                                    <Picker disableAutoFocus="true" native="true" onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
                                 </div>
                             }
                         </div>
