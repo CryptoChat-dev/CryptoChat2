@@ -177,8 +177,8 @@ const Chat = () => {
 
     function messageHandler(msg) {
         // Handles incoming message responses
-        var receivedHMAC = msg.hmac.toString();
-        var calculatedHMAC = CryptoJS.HmacSHA256(msg.message, state.key);
+        var receivedHMAC = msg.hmac;
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.message, state.key).toString();
         if (receivedHMAC !== calculatedHMAC) {
             setReceived((messages) => [// Display a decryption error
                 ...messages,
