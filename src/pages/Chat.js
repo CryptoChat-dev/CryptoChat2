@@ -450,7 +450,7 @@ const Chat = () => {
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
-                var calculatedHMAC = CryptoJS.HmacSHA256(encryptedData, state.key).toString();
+                var calculatedHMAC = CryptoJS.HmacSHA256(encryptedData.toString(), state.key).toString();
                 console.log("[Send Button] File data encrypted. Sending...")
 
                 var stream = ss.createStream();
