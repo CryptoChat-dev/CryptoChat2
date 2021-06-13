@@ -187,7 +187,8 @@ const Chat = () => {
                         <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
                 </div>
             ]);
-            console.log(`Unable to verify authenticity: ${msg}`)
+            console.log(`Unable to verify authenticity.\nReceived HMAC: ${receivedHMAC}\nCalculated HMAC: ${calculatedHMAC}\nReceived message:`);
+            console.log(msg);
             return;
         }
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
