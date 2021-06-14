@@ -11,7 +11,7 @@ var hideLoader;
 
 try {
     showLoader = () => {loader.classList.remove('loader--hide'); overlay.classList.remove('overlay--hide')};
-    hideLoader = () => {loader.classList.add('loader--hide'); overlay.classList.add('overlay--hide')};
+    hideLoader = () => {loader.remove('loader'); overlay.remove('overlay')};
 } catch (err) {
     useHistory.push('/');
 }
