@@ -71,7 +71,11 @@ const Chat = () => {
         e.preventDefault();
         console.log("[Tab] Close attempt detected.")
         console.log("[Tab] Broadcasting leave.");
-        broadcastLeave();
+        // broadcastLeave();
+        socket.emit('leave', {
+            "roomName": state.roomName,
+            "user_name": crypt.encryptMessage(state.username, state.key)
+        });
     };
 
     useEffect(() => {
