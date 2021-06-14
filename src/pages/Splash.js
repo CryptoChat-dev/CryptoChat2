@@ -14,7 +14,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faRandom} from '@fortawesome/free-solid-svg-icons'
 
 // Files
-import {scorePassword, getWordNum} from '../utils/password';
+import {scorePassword, getWordNum, randomUsername} from '../utils/password';
 
 // Code
 
@@ -90,7 +90,7 @@ const Splash = () => {
             <div id="content">
                 <div class="container">
                     <div class="logo"></div>
-                    <h1 class="title splash">CryptoChat 2.3</h1>
+                    <h1 class="title splash">CryptoChat 2.4</h1>
                     <h2 class="subtitle splash">Simple, secure and ephemeral anonymous messaging.</h2>
                 </div>
                 <div class="messagebox-parent">
@@ -102,7 +102,7 @@ const Splash = () => {
                                         (e) => setUsername(e.target.value)
                                     }/>
                                     <div class="randomize-parent">
-                                        <button class="iconbutton random" title="Generate Random Username" onClick={() => {setUsername(getWordNum(2))}}>
+                                        <button class="iconbutton random" title="Generate Random Username" onClick={() => {setUsername(randomUsername(2))}}>
                                             <FontAwesomeIcon icon={faRandom} />
                                         </button>
                                     </div>
@@ -157,7 +157,7 @@ const Splash = () => {
                     }
                     isOpen={showDialog}>
                     <h1>Weak Key</h1>
-                    <p>The key you entered is insecure. It is recommended to use the random button. Do you wish to override?</p>
+                    <p>The key you entered is insecure, which could leave your communication vulnerable to attacks. It is recommended to use the randomizer button. Do you wish to override?</p>
                     <div class="modalButtons">
                         <button class="modalButton red"
                             onClick={handleJoin}>Yes</button>

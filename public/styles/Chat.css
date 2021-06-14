@@ -42,7 +42,7 @@ a {
 }
 
 .chatbox-messages {
-    height: 75%;
+    height: 73%;
 }
 
 .chatbox-buttons {
@@ -99,7 +99,7 @@ a {
     color: var(--txt-color);
 }
 
-.messageviewer p {
+.messageviewer p:not(.dateTime) {
     margin-left: 5%;
 }
 
@@ -160,6 +160,7 @@ a {
     filter: blur(5px);
     transition-duration: .1s;
     margin-top: 2%;
+    word-break: break-all;
 }
 
 .keyname:hover {

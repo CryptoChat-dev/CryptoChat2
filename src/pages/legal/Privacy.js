@@ -67,7 +67,7 @@ const Privacy = () => {
                                                                     following services may collect user information when in use:
                     </p>
                     <ul class="bullet">
-                        <li>Cloudflare (cloudflare.com)</li>
+                        <li>JSDelivr (jsdelivr.com)</li>
                     </ul>
                     <p class="textcontent">
                         These services have their own privacy policies. We encourage

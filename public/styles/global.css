@@ -8,6 +8,7 @@
     --bttn-color: black;
     --modal-color: #292929;
     --decrypt-color: rgb(119, 119, 255);
+    --date-color: rgb(139, 139, 139);
 }
 
 [data-theme='light'] {
@@ -20,6 +21,7 @@
     --bttn-color: white;
     --modal-color: #b3b3b3;
     --decrypt-color: blue;
+    --date-color: rgb(104, 104, 104);
 }
 
 * {
@@ -162,8 +164,7 @@ h1 {
 }
 
 .iconbutton.attach {
-    /* margin-left: 3%; */
-    /* margin-right: 1%; */
+    margin-left: 1%;
 }
 
 .iconbutton.emoji {
@@ -249,10 +250,21 @@ h1 {
     font-size: 1.5rem;
 }
 
+.dateTime {
+    color: var(--date-color);
+    font-size: 0.75rem;
+    margin-top: 0;
+    margin-bottom: 0.1rem;
+}
+
 /* Input */
 
 .fileinput {
     display: none;
+}
+
+.emoji-picker-react input.emoji-search {
+    color: black;
 }
 
 /* Media queries */

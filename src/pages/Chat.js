@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {Helmet} from 'react-helmet';
 import {useHistory} from 'react-router-dom';
 import {Context} from '../Components/Store';
-import useSound from 'use-sound';
 import notificationSound from '../assets/notification.mp3';
 import Picker from 'emoji-picker-react';
 
@@ -25,9 +24,9 @@ import {b64toBlob, saveBlob, retrieveB64FromBlob} from '../utils/blob';
 import {crypt} from '../utils/encryption.js';
 
 // Socket.IO
-import io from "socket.io-client";
+import {socket} from "../utils/Socket";
 const ss = require('socket.io-stream')
-let socket;
+
 
 
 // Code
@@ -39,7 +38,7 @@ const Chat = () => {
     // State Varibles
     const [userCount, setUserCount] = React.useState(null)
 
-    const [playNotification] = useSound(notificationSound);
+    const [notification] = React.useState(new Audio(notificationSound));
 
     const [state, dispatch] = useContext(Context);
 
@@ -72,7 +71,11 @@ const Chat = () => {
         e.preventDefault();
         console.log("[Tab] Close attempt detected.")
         console.log("[Tab] Broadcasting leave.");
-        broadcastLeave();
+        // broadcastLeave();
+        socket.emit('leave', {
+            "roomName": state.roomName,
+            "user_name": crypt.encryptMessage(state.username, state.key)
+        });
     };
 
     useEffect(() => {
@@ -81,6 +84,8 @@ const Chat = () => {
             history.push('/');
             return;
         }
+
+        notification.volume = 0.5;
         
         // Hash the room key with SHA-512
         var roomName = CryptoJS.SHA512(state.key).toString();
@@ -90,7 +95,7 @@ const Chat = () => {
         
         if (joinedSent === false) {
             // If the join message hasn't been sent, do it.
-            socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
+            // socket = io(process.env.REACT_APP_API); // Initiate the socket connection to the API
             socket.emit('join', {
                 "roomName": roomName,
                 "user_name": crypt.encryptMessage(state.username, state.key)
@@ -131,10 +136,11 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername} has joined the room.</b></p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
+                        <b title={new Date().toLocaleString()}> {decryptedUsername} has joined the room.</b></p>
                 </div>
             ]);
-            playNotification();
+            if (document.hasFocus() === false) {notification.play()};
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -160,10 +166,11 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername} has left the room.</b></p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
+                        <b title={new Date().toLocaleString()}> {decryptedUsername} has left the room.</b></p>
                 </div>
             ]);
-            playNotification();
+            if (document.hasFocus() === false) {notification.play()};
             try {
                 // Scroll down
                 divRef.current.scrollIntoView({behavior: 'smooth'});
@@ -177,6 +184,20 @@ const Chat = () => {
 
     function messageHandler(msg) {
         // Handles incoming message responses
+        var receivedHMAC = msg.hmac;
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.message, state.key).toString();
+        if (receivedHMAC !== calculatedHMAC) {
+            setReceived((messages) => [// Display a decryption error
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
+            console.log(`Unable to verify authenticity.\nReceived HMAC: ${receivedHMAC}\nCalculated HMAC: ${calculatedHMAC}\nReceived message:`);
+            console.log(msg);
+            return;
+        }
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedMessage = crypt.decryptMessage(msg.message, state.key); // Decrypt the message
         if (decryptedUsername !== '' || decryptedMessage !== '') { // if the username and message are empty values, stop
@@ -185,7 +206,8 @@ const Chat = () => {
                 ...messages,
                 <div ref={divRef}>
                     <p>
-                        <b> {decryptedUsername}</b>: {decryptedMessage}</p>
+                        <p class="dateTime">{new Date().toLocaleString()}</p>
+                        <b title={new Date().toLocaleString()}> {decryptedUsername}</b>: {decryptedMessage}</p>
                 </div>
             ]);
             try {
@@ -204,7 +226,7 @@ const Chat = () => {
             ]);
             console.log(`Not my message: ${msg}`)
         }
-        playNotification();
+        if (document.hasFocus() === false) {notification.play()};
     }
 
     function fileHandler(msg) {
@@ -212,6 +234,22 @@ const Chat = () => {
         console.log(msg); // Print file response for debugging
 
         console.log("[File Handler] file received");
+
+        var receivedHMAC = msg.hmac;
+        var calculatedHMAC = CryptoJS.HmacSHA256(msg.data, state.key).toString();
+
+        if (receivedHMAC !== calculatedHMAC) {
+            setReceived((messages) => [// Display a decryption error
+                ...messages,
+                <div ref={divRef}>
+                    <p>
+                        <b>[DECRYPTION ERROR]</b>: [DECRYPTION ERROR]</p>
+                </div>
+            ]);
+            console.log(`Unable to verify authenticity.\nReceived HMAC: ${receivedHMAC}\nCalculated HMAC: ${calculatedHMAC}\nReceived message:`);
+            console.log(msg);
+            return;
+        }
 
         var decryptedUsername = crypt.decryptMessage(msg.user_name, state.key); // Decrypt the username
         var decryptedName = crypt.decryptMessage(msg.name, state.key); // Decrypt the file name
@@ -226,7 +264,8 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
-                                <b> {decryptedUsername} sent an image</b>.
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
+                                <b title={new Date().toLocaleString()}> {decryptedUsername} sent an image</b>.
                                 <span class="decrypt"
                                     onClick={
                                         () => {
@@ -247,6 +286,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent an audio file</b>.
                                 <span class="decrypt"
                                     onClick={
@@ -267,6 +307,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent a video</b>.
                                 <span class="decrypt"
                                     onClick={
@@ -287,6 +328,7 @@ const Chat = () => {
                         ...messages,
                         <div ref={divRef}>
                             <p>
+                                <p class="dateTime">{new Date().toLocaleString()}</p>
                                 <b> {decryptedUsername} sent an attachment</b>.
                                 <span class="decrypt"
                                     onClick={
@@ -302,8 +344,7 @@ const Chat = () => {
                 }
             }
 
-
-            playNotification();
+            if (document.hasFocus() === false) {notification.play()};
 
             try {
                 // Scroll down
@@ -372,10 +413,13 @@ const Chat = () => {
 
     function socketEmit(msg) {
         // Emits message events
+        var encryptedMessage = crypt.encryptMessage(msg, state.key);
+
         socket.emit('chat event', {
             "roomName": state.roomName,
             "user_name": crypt.encryptMessage(state.username, state.key),
-            "message": crypt.encryptMessage(msg, state.key)
+            "message": encryptedMessage,
+            "hmac": CryptoJS.HmacSHA256(encryptedMessage, state.key).toString()
         });
     }
 
@@ -411,6 +455,7 @@ const Chat = () => {
                 var encryptedMIME = crypt.encryptMessage(fileObject.type, state.key);
                 console.log("[Send Button] Username, file name and file MIME encrypted.");
                 var encryptedData = crypt.encryptMessage(encodedData, state.key);
+                var calculatedHMAC = CryptoJS.HmacSHA256(encryptedData.toString(), state.key).toString();
                 console.log("[Send Button] File data encrypted. Sending...")
 
                 var stream = ss.createStream();
@@ -420,7 +465,8 @@ const Chat = () => {
                         "user_name": encryptedUsername,
                         "name": encryptedName,
                         "type": encryptedMIME,
-                        "data": encryptedData
+                        "data": encryptedData,
+                        "hmac": calculatedHMAC
                     });
                 } catch(err) {
                     console.log("[Send Button] Couldn't send file.");
@@ -586,10 +632,10 @@ const Chat = () => {
         <div class="chatbox-parent" id="chatbox-parent">
             <div class="chatbox-child">
                 <div class="chatbox-header">
-                    <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
+                    <p class="keyname title" id="keyname" title="This key is used to join your CryptoChat room.">Room Key: <p title="This key is used to join your CryptoChat room." class="keyname">{
                         state.key
                     }</p></p>
-                    <p class="icon users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
+                    <p class="icon users" title="Connected Users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>
                     <h1 class="chatbox-title">CryptoChat</h1>
                     <h2 class="chatbox-subtitle">
                         A stunning encrypted chat webapp.
@@ -609,6 +655,14 @@ const Chat = () => {
                     <div class="messagebox">
                         <div class="fields">
                             <div class="username">
+                                <button class="iconbutton attach"
+                                    title="Attach a file"
+                                    onClick={handleMessageButtonClick}> {
+                                    messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
+                                }
+                                    {
+                                    messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
+                                }</button>
                                 <input id="msg" type="text" class="message" placeholder="What's up?"
                                     disabled={
                                         (disabled) ? "disabled" : ""
@@ -619,18 +673,11 @@ const Chat = () => {
                                 <input type="file" id="file-input" class="fileinput"
                                     ref={hiddenFileInput}
                                     onChange={handleInputChange}/>
-                                <button class="iconbutton attach"
-                                    onClick={handleMessageButtonClick}> {
-                                    messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
-                                }
-                                    {
-                                    messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
-                                }</button>
-                                <button class="iconbutton emoji" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
+                                <button class="iconbutton emoji" title="Open Emoji Picker" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
                             </div>
                             {showEmojiPicker === true && window.innerWidth > 800 &&
                                 <div class="emojiPicker">
-                                    <Picker onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
+                                    <Picker disableAutoFocus="true" native="true" onEmojiClick={(e, emojiObject) => {setMessage(message.concat(emojiObject.emoji))}}/>
                                 </div>
                             }
                         </div>
@@ -661,7 +708,6 @@ const Chat = () => {
                     }
                 }
                 isOpen={showDialog}>
-                <div class="loader"></div>
                 <p class="icon uploading"><FontAwesomeIcon icon={faPaperPlane} /></p>
                 <h1>Uploading File...</h1>
                 <p>Please standby while <b>{file.name}</b> is being end-to-end encrypted and uploaded to the server.</p>
