@@ -408,6 +408,9 @@ const Chat = () => {
 
     function handleLeave() {
         broadcastLeave();
+        dispatch({type: 'SET_KEY', payload: null});
+        dispatch({type: 'SET_USERNAME', payload: null});
+        dispatch({type: 'SET_ROOM', payload: null});
         history.push('/');
     }
 
