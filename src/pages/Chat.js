@@ -646,6 +646,14 @@ const Chat = () => {
                     <div class="messagebox">
                         <div class="fields">
                             <div class="username">
+                                <button class="iconbutton attach"
+                                    title="Attach a file"
+                                    onClick={handleMessageButtonClick}> {
+                                    messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
+                                }
+                                    {
+                                    messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
+                                }</button>
                                 <input id="msg" type="text" class="message" placeholder="What's up?"
                                     disabled={
                                         (disabled) ? "disabled" : ""
@@ -656,14 +664,6 @@ const Chat = () => {
                                 <input type="file" id="file-input" class="fileinput"
                                     ref={hiddenFileInput}
                                     onChange={handleInputChange}/>
-                                <button class="iconbutton attach"
-                                    title="Attach a file"
-                                    onClick={handleMessageButtonClick}> {
-                                    messageIcon === 'faPaperclip' && <FontAwesomeIcon icon={faPaperclip}/>
-                                }
-                                    {
-                                    messageIcon === 'faTimes' && <FontAwesomeIcon icon={faTimes}/>
-                                }</button>
                                 <button class="iconbutton emoji" title="Open Emoji Picker" onClick={handleEmojiButtonClick}><FontAwesomeIcon icon={faLaugh} /></button>
                             </div>
                             {showEmojiPicker === true &&
