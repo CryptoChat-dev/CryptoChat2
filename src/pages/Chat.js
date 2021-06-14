@@ -24,7 +24,6 @@ import {b64toBlob, saveBlob, retrieveB64FromBlob} from '../utils/blob';
 import {crypt} from '../utils/encryption.js';
 
 // Socket.IO
-import io from "socket.io-client";
 import {socket} from "../utils/Socket";
 const ss = require('socket.io-stream')
 
@@ -629,7 +628,7 @@ const Chat = () => {
         <div class="chatbox-parent" id="chatbox-parent">
             <div class="chatbox-child">
                 <div class="chatbox-header">
-                    <p class="keyname title" id="keyname">Room Key: <p class="keyname">{
+                    <p class="keyname title" id="keyname" title="This key is used to join your CryptoChat room.">Room Key: <p title="This key is used to join your CryptoChat room." class="keyname">{
                         state.key
                     }</p></p>
                     <p class="icon users" title="Connected Users"><FontAwesomeIcon icon={faUsers} /> {userCount}</p>

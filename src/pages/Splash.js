@@ -157,7 +157,7 @@ const Splash = () => {
                     }
                     isOpen={showDialog}>
                     <h1>Weak Key</h1>
-                    <p>The key you entered is insecure. It is recommended to use the random button. Do you wish to override?</p>
+                    <p>The key you entered is insecure, which could leave your communication vulnerable to attacks. It is recommended to use the randomizer button. Do you wish to override?</p>
                     <div class="modalButtons">
                         <button class="modalButton red"
                             onClick={handleJoin}>Yes</button>
