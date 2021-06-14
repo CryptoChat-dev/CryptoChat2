@@ -155,6 +155,10 @@ h1 {
     background: rgb(11, 95, 247);
 }
 
+.emoji-picker-react input.emoji-search {
+    color: black;
+}
+
 .iconbutton {
     /* background: var(--bttn-color); */
     background: transparent;
