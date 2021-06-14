@@ -12,6 +12,12 @@ Here's an overview of the features CryptoChat has to offer.
 
 CryptoChat has barely any clutter on its user interface. It's a simple, yet featured, interface that anybody could use--even your grandma!
 
+![Alice Hello](https://james.hacked-the.network/1337/ncDNNXz.png)
+
+![Bob File Sending](https://james.hacked-the.network/1337/ZnoI5OZ.png)
+
+![Alice Listening](https://james.hacked-the.network/1337/XUxcZFL.png)
+
 ### Secure File Transfer
 
 CryptoChat supports end-to-end encrypted file transfer\*, so you can send sensitive files without leaving a trace.
