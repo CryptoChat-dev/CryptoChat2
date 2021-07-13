@@ -12,11 +12,11 @@ Here's an overview of the features CryptoChat has to offer.
 
 CryptoChat has barely any clutter on its user interface. It's a simple, yet featured, interface that anybody could use--even your grandma!
 
-![Alice Hello](https://james.hacked-the.network/1337/ncDNNXz.png)
+![Alice Hello](https://cryptochat.hacked-the-mainfra.me/3qkb2?raw=true)
 
-![Bob File Sending](https://james.hacked-the.network/1337/ZnoI5OZ.png)
+![Bob File Sending](https://cryptochat.hacked-the-mainfra.me/08X3T?raw=true)
 
-![Alice Listening](https://james.hacked-the.network/1337/XUxcZFL.png)
+![Alice Listening](https://cryptochat.hacked-the-mainfra.me/6xwRW?raw=true)
 
 ### Secure File Transfer
 
